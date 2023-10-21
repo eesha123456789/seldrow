@@ -42,3 +42,17 @@ pygame.display.update()
 LETTER_X_SPACING = 85
 LETTER_Y_SPACING = 12
 LETTER_SIZE = 75
+
+# Global variables
+
+guesses_count = 0
+
+# guesses is a 2D list storing all the guesses, which are lists of letters.
+# The list will be iterated through so each letter in each guess will be drawn on the screen.
+guesses = [[]] * 6
+
+current_guess = []
+current_guess_string = ""
+current_letter_bg_x = 110
+
+game_result = ""
