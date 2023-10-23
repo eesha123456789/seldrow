@@ -82,3 +82,11 @@ class Wordle:
         self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         SCREEN.blit(self.text_surface, self.text_rect)
         pygame.display.update()
+
+     def delete(self):
+        # Fills the letter's spot with the default square, emptying it.
+        pygame.draw.rect(SCREEN, "white", self.bg_rect)
+        pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
+        pygame.display.update()
+
+
