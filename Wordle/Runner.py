@@ -61,9 +61,6 @@ current_letter_bg_x = 110
 
 game_result = ""
 
-
-
-
 class Wordle:
     def__init__(self, text, bg_position):
         self.bg_color = "white"
@@ -85,5 +82,3 @@ class Wordle:
         self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         SCREEN.blit(self.text_surface, self.text_rect)
         pygame.display.update()
-
- 
