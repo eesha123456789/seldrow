@@ -4,15 +4,16 @@ class Main:
     words = file.read.splitlines()
 
 
-import pygame
-import sys
-import random
-from words import*
+import pygame #user interface
+import sys #variables and functions
+import random #for random answerWord in words
+from words import* 
 
 pygame.init();
 
 #constants
 
+#hex colors
 GREEN = "#6aaa64"
 YELLOW = "#c9b458"
 GREY = "#787c7e"
@@ -21,9 +22,11 @@ FILLED_OUTLINE = "#878a8c"
 
 WidthWIDTH, HEIGHT = 633, 900
 
+
+#Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(317, 300))
+BACKGROUND = pygame.image.load("assets/Starting Tiles.png")  #adds background image
+BACKGROUND_RECT = BACKGROUND.get_rect(center=(317, 300)) 
 ICON = pygame.image.load("assets/Icon.png")
 
 pygame.display.set_caption("Seldrow!")
@@ -36,12 +39,13 @@ ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 #AVAILABLE_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
 
 SCREEN.fill("white")
-SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-pygame.display.update()
+SCREEN.blit(BACKGROUND, BACKGROUND_RECT) #place image onto the screen
+pygame.display.update() #whole window is updated
 
 LETTER_X_SPACING = 85
 LETTER_Y_SPACING = 12
 LETTER_SIZE = 75
+LETTER_FONT = pygame.font.Font("FredokaOne-Regualr.otf")
 
 # Global variables
 
@@ -57,17 +61,24 @@ current_letter_bg_x = 110
 
 game_result = ""
 
-lass Wordle:
-    def __init__(self, x, y, letter):
-        self.x = x
-        self.y = y
-        self.text = letter
-        self.rect = (x, y, 57, 75)
-        self.bg_color = OUTLINE
+class Wordle:
+    def__init__(self, text, bg_position):
+        self.bg_color = "white"
+        self.text_color="black"
+        self.bg_position = bg_position
+        self.bg_x = bg_position[0]
+        self.bg_y = bg_position[1]
+        self.text = text
+        self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
+        self.text_position = (self.bg_x+36, self.bg_y+34)
+        self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
+        self.text_rect = self.text_surface.get_rect(center=self.text_position)
 
     def draw(self):
-        pygame.draw.rect(SCREEN, self.bg_color, self.rect)
-        self.text_surface = AVAILABLE_LETTER_FONT.render(self.text, True, "blue")
-        self.text_rect = self.text_surface.get_rect(center=(self.x+27, self.y+30))
+        # Puts the letter and text on the screen at the desired positions.
+        pygame.draw.rect(SCREEN, self.bg_color, self.bg_rect)
+        if self.bg_color == "white":
+            pygame.draw.rect(SCREEN, FILLED_OUTLINE, self.bg_rect, 3)
+        self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         SCREEN.blit(self.text_surface, self.text_rect)
         pygame.display.update()
