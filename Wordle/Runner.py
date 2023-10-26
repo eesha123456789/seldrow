@@ -14,11 +14,11 @@ pygame.init();
 #constants
 
 #hex colors
-GREEN = "#6aaa64"
-YELLOW = "#c9b458"
+GREEN = "#77DD77"
+YELLOW = "#fdfd96"
 GREY = "#787c7e"
-OUTLINE = "#d3d6da"
-FILLED_OUTLINE = "#878a8c"
+OUTLINE = "#cfcfcf"
+FILLED_OUTLINE = "#878787"
 
 WidthWIDTH, HEIGHT = 633, 900
 
@@ -27,16 +27,12 @@ WidthWIDTH, HEIGHT = 633, 900
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 BACKGROUND = pygame.image.load("assets/Starting Tiles.png")  #adds background image
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(317, 300)) 
-ICON = pygame.image.load("assets/Icon.png")
 
 pygame.display.set_caption("Seldrow!")
 pygame.display.set_icon(ICON)
 
 
 ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
-
-#GUESSED_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 50)
-#AVAILABLE_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
 
 SCREEN.fill("white")
 SCREEN.blit(BACKGROUND, BACKGROUND_RECT) #place image onto the screen
@@ -89,4 +85,12 @@ class Wordle:
         pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
         pygame.display.update()
 
+while True:
+    if game_result != "":
+        play_again()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+       
 
