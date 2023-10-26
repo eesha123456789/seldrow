@@ -61,9 +61,6 @@ current_letter_bg_x = 110
 
 game_result = ""
 
-
-
-
 class Wordle:
     def__init__(self, text, bg_position):
         self.bg_color = "white"
@@ -92,4 +89,4 @@ class Wordle:
         pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
         pygame.display.update()
 
- 
+
