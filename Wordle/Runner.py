@@ -1,7 +1,9 @@
+"""
 class Main:
     words = []
     file = open("words.txt", "r")
     words = file.read.splitlines()
+"""
 
 import pygame #user interface
 import sys #variables and functions
@@ -23,7 +25,7 @@ WIDTH, HEIGHT = 633, 900
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-BACKGROUND = pygame.image.load("assets/Starting Tiles.png")  #adds background image
+BACKGROUND = pygame.image.load("blankwordle.png")  #adds background image
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(317, 300)) 
 
 pygame.display.set_caption("Seldrow!")
@@ -39,7 +41,7 @@ pygame.display.update() #whole window is updated
 LETTER_X_SPACING = 85
 LETTER_Y_SPACING = 12
 LETTER_SIZE = 75
-LETTER_FONT = pygame.font.Font("FredokaOne-Regualr.otf")
+LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 
 # Global variables
 
@@ -56,7 +58,7 @@ current_letter_bg_x = 110
 game_result = ""
 
 class Wordle:
-    def__init__(self, text, bg_position):
+    def __init__(self, text, bg_position):
         self.bg_color = "white"
         self.text_color="black"
         self.bg_position = bg_position
@@ -77,7 +79,7 @@ class Wordle:
         SCREEN.blit(self.text_surface, self.text_rect)
         pygame.display.update()
 
-     def delete(self):
+    def delete(self):
         # Fills the letter's spot with the default square, emptying it.
         pygame.draw.rect(SCREEN, "white", self.bg_rect)
         pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
