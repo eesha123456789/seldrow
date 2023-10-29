@@ -7,7 +7,7 @@ import pygame #user interface
 import sys #variables and functions
 import random #for random answerWord in words
 
-pygame.init();
+pygame.init()
 
 #constants
 
@@ -18,7 +18,7 @@ GREY = "#787c7e"
 OUTLINE = "#cfcfcf"
 FILLED_OUTLINE = "#878787"
 
-WidthWIDTH, HEIGHT = 633, 900
+WIDTH, HEIGHT = 633, 900
 
 
 #Variables for set up of dislay window (how it looks)
@@ -27,7 +27,7 @@ BACKGROUND = pygame.image.load("assets/Starting Tiles.png")  #adds background im
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(317, 300)) 
 
 pygame.display.set_caption("Seldrow!")
-pygame.display.set_icon(ICON)
+
 
 
 ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
