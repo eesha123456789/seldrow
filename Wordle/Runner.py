@@ -6,10 +6,10 @@ class Main:
 """
 
 import pygame #user interface
-import sys #variables and functions
+import sys #allows us to exit
 import random #for random answerWord in words
 
-pygame.init()
+pygame.init() #initializes all modules to get everything started
 
 #constants
 
@@ -18,9 +18,8 @@ GREEN = "#77DD77"
 YELLOW = "#fdfd96"
 GREY = "#787c7e"
 OUTLINE = "#cfcfcf"
-FILLED_OUTLINE = "#878787"
 
-WIDTH, HEIGHT = 633, 900
+WIDTH, HEIGHT = 650, 700
 
 
 #Variables for set up of dislay window (how it looks)
@@ -32,15 +31,14 @@ pygame.display.set_caption("Seldrow!")
 
 
 
-ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
 SCREEN.fill("white")
 SCREEN.blit(BACKGROUND, BACKGROUND_RECT) #place image onto the screen
 pygame.display.update() #whole window is updated
 
-LETTER_X_SPACING = 85
-LETTER_Y_SPACING = 12
-LETTER_SIZE = 75
+LETTER_X_SPACING = 0
+LETTER_Y_SPACING = 0
+LETTER_SIZE = 0
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 
 # Global variables
@@ -53,7 +51,6 @@ guesses = [[]] * 6
 
 current_guess = []
 current_guess_string = ""
-current_letter_bg_x = 110
 
 game_result = ""
 
@@ -66,15 +63,13 @@ class Wordle:
         self.bg_y = bg_position[1]
         self.text = text
         self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
-        self.text_position = (self.bg_x+36, self.bg_y+34)
+        self.text_position = (self.bg_x, self.bg_y)
         self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         self.text_rect = self.text_surface.get_rect(center=self.text_position)
 
     def draw(self):
         # Puts the letter and text on the screen at the desired positions.
         pygame.draw.rect(SCREEN, self.bg_color, self.bg_rect)
-        if self.bg_color == "white":
-            pygame.draw.rect(SCREEN, FILLED_OUTLINE, self.bg_rect, 3)
         self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         SCREEN.blit(self.text_surface, self.text_rect)
         pygame.display.update()
