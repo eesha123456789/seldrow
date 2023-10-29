@@ -3,11 +3,9 @@ class Main:
     file = open("words.txt", "r")
     words = file.read.splitlines()
 
-
 import pygame #user interface
 import sys #variables and functions
 import random #for random answerWord in words
-from words import* 
 
 pygame.init();
 
@@ -86,8 +84,6 @@ class Wordle:
         pygame.display.update()
 
 while True:
-    if game_result != "":
-        play_again()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
