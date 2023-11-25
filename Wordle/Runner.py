@@ -3,11 +3,17 @@ class Main:
     words = []
     file = open("words.txt", "r")
     words = file.read.splitlines()
+
+//use this
+    words = []
+    with open("words.txt", "r") as file:
+        words = file.read().splitlines()
+    wordAnswer = random.choice(words)
 """
 
 import pygame #user interface
 import sys #variables and functions
-import random #for random answerWord in words
+import random #for random answer in words text file
 
 pygame.init()
 
@@ -57,10 +63,10 @@ current_letter_bg_x = 110
 
 game_result = ""
 
-class Wordle:
+class WordleLetter:
     def __init__(self, text, bg_position):
         self.bg_color = "white"
-        self.text_color="black"
+        self.text_color = "black"
         self.bg_position = bg_position
         self.bg_x = bg_position[0]
         self.bg_y = bg_position[1]
@@ -84,6 +90,49 @@ class Wordle:
         pygame.draw.rect(SCREEN, "white", self.bg_rect)
         pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
         pygame.display.update()
+    
+def check_guess(guess, answer):
+    # note: must use global keyword to change global variables in function
+    global current_guess, guesses_count, current_guess_string, game_result
+
+    all_correct = True
+    
+    #iterate through each letter in the guess
+    for i in range(5):
+        cur_letter = guess[i].lower()
+        if guess[i] == answer[i]:
+            guess[i].bg_color = GREEN
+            guess[i].text_color = "white"
+        elif guess[i] in answer:
+            guess[i].bg_color = YELLOW
+            guess[i].text_color = "white"
+            all_correct = False
+        else: #letter not in answer
+            guess[i].bg_color = GREY
+            guess[i].text_color = "white"
+            all_correct = False
+
+        pygame.display.update
+
+    if all_correct == True:
+        game_result = "W"
+    else:
+        game_result = "L"
+
+    guesses_count += 1
+    current_guess = []
+    current_guess_string = ""
+        
+
+def add_new_letter():
+    #adds new letter to the guess
+    
+def delete_letter():
+    #deletes letter from guess
+
+def reset():
+    #resets variables
+    
 
 while True:
     for event in pygame.event.get():
