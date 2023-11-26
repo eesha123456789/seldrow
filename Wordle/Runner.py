@@ -14,7 +14,6 @@ class Main:
 import pygame #user interface
 import sys #variables and functions
 import random #for random answer in words text file
-=======
 import sys #allows us to exit
 import random #for random answerWord in words
 
