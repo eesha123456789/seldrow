@@ -17,8 +17,11 @@ import random #for random answer in words text file
 import sys #allows us to exit
 import random #for random answerWord in words
 
+import main_menu 
+import button
 
 pygame.init() #initializes all modules to get everything started
+
 
 #constants
 
@@ -28,7 +31,7 @@ YELLOW = "#fdfd96"
 GREY = "#787c7e"
 OUTLINE = "#cfcfcf"
 
-WIDTH, HEIGHT = 650, 700
+WIDTH, HEIGHT = 700, 660
 
 
 #Variables for set up of dislay window (how it looks)
@@ -40,10 +43,10 @@ pygame.display.set_caption("Seldrow!")
 
 
 
-
 SCREEN.fill("white")
 SCREEN.blit(BACKGROUND, BACKGROUND_RECT) #place image onto the screen
 pygame.display.update() #whole window is updated
+
 
 LETTER_X_SPACING = 0
 LETTER_Y_SPACING = 0
@@ -63,6 +66,11 @@ current_guess_string = ""
 
 game_result = ""
 
+
+#Main Menu Button
+WORDLE_POS_MOUSE = pygame.mouse.get_pos()
+WORDLE_MAIN_MENU=button.Button()
+
 class WordleLetter:
     def __init__(self, text, bg_position):
         self.bg_color = "white"
@@ -81,6 +89,13 @@ class WordleLetter:
         pygame.draw.rect(SCREEN, self.bg_color, self.bg_rect)
         self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         SCREEN.blit(self.text_surface, self.text_rect)
+        
+        
+        WORDLE_MAIN_MENU = button.Button(pos = (400,300), text_input = "Main Menu")
+        WORDLE_MAIN_MENU.changeColor(WORDLE_POS_MOUSE)
+        #WORDLE_MAIN_MENU.update(SCREEN)
+        
+        
         pygame.display.update()
 
     def delete(self):
@@ -133,9 +148,12 @@ def check_guess(guess, answer):
     
 
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if WORDLE_MAIN_MENU.checkForInput(WORDLE_POS_MOUSE):
+                    main_menu.main_menu_main()
        
 
