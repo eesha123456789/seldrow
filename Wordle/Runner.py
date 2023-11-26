@@ -77,7 +77,7 @@ class WordleLetter:
         self.text_rect = self.text_surface.get_rect(center=self.text_position)
 
     def draw(self):
-        # Puts the letter and text on the screen at the desired positions.
+        # Puts the letter on the screen at the desired positions.
         pygame.draw.rect(SCREEN, self.bg_color, self.bg_rect)
         self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
         SCREEN.blit(self.text_surface, self.text_rect)
