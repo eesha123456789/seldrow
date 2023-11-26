@@ -122,13 +122,13 @@ def check_guess(guess, answer):
     current_guess_string = ""
         
 
-def add_new_letter():
+#def add_new_letter():
     #adds new letter to the guess
-    
-def delete_letter():
+
+#def delete_letter():
     #deletes letter from guess
 
-def reset():
+#def reset():
     #resets variables
     
 
