@@ -25,17 +25,6 @@ pygame.init() #initializes all modules to get everything started
 
 #constants
 
-
-# Different Screens Images
-BEACH_BG = pygame.image.load("bg_folder/beach_bg.jpg") 
-BEACH_RECT = BEACH_BG.get_rect(center=(500, 300)) 
-FOOD_BG = pygame.image.load("bg_folder/food_bg.jpg") 
-FOOD_RECT = FOOD_BG.get_rect(center=(500, 300)) 
-WORDS_BG = pygame.image.load("bg_folder/words_bg.PNG") 
-WORDS_RECT = WORDS_BG.get_rect(center=(500, 300)) 
-BACKGROUND = pygame.image.load("blankwordle.png")
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(500, 300)) 
-
 #hex colors
 GREEN = "#77DD77"
 YELLOW = "#fdfd96"
@@ -43,6 +32,17 @@ GREY = "#787c7e"
 OUTLINE = "#cfcfcf"
 
 WIDTH, HEIGHT = 800, 660
+
+# Different Screens Images
+BEACH_BG = pygame.image.load("bg_folder/beach_bg.jpg") 
+BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+FOOD_BG = pygame.image.load("bg_folder/food_bg.jpg") 
+FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+WORDS_BG = pygame.image.load("bg_folder/words_bg.PNG") 
+WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+BACKGROUND = pygame.image.load("blankwordle.png")
+BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
