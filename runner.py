@@ -53,26 +53,28 @@ SCREEN.fill("white")
 
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 wordle_start = False
-BG_TEXT1 = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
-BG_TEXT_RECT1 = BG_TEXT1.get_rect()
-BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2 -40)
-SCREEN.blit(BG_TEXT1, BG_TEXT_RECT1)
-BG_TEXT2 = LETTER_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
-BG_TEXT_RECT2 = BG_TEXT2.get_rect()
-BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2 -20)
-SCREEN.blit(BG_TEXT2, BG_TEXT_RECT2)
-BG_TEXT3 = LETTER_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
-BG_TEXT_RECT3 = BG_TEXT3.get_rect()
-BG_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2)
-SCREEN.blit(BG_TEXT3, BG_TEXT_RECT3)
-BG_TEXT4 = LETTER_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
-BG_TEXT_RECT4 = BG_TEXT4.get_rect()
-BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+20)
-SCREEN.blit(BG_TEXT4, BG_TEXT_RECT4)
-BG_TEXT5 = LETTER_FONT.render("""Press b if your BOOORRINGG (lame)""", True, "black", "white")
-BG_TEXT_RECT5 = BG_TEXT5.get_rect()
-BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
-SCREEN.blit(BG_TEXT5, BG_TEXT_RECT5)
+def screentext():
+    BG_TEXT1 = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
+    BG_TEXT_RECT1 = BG_TEXT1.get_rect()
+    BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2 -40)
+    SCREEN.blit(BG_TEXT1, BG_TEXT_RECT1)
+    BG_TEXT2 = LETTER_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
+    BG_TEXT_RECT2 = BG_TEXT2.get_rect()
+    BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2 -20)
+    SCREEN.blit(BG_TEXT2, BG_TEXT_RECT2)
+    BG_TEXT3 = LETTER_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
+    BG_TEXT_RECT3 = BG_TEXT3.get_rect()
+    BG_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2)
+    SCREEN.blit(BG_TEXT3, BG_TEXT_RECT3)
+    BG_TEXT4 = LETTER_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
+    BG_TEXT_RECT4 = BG_TEXT4.get_rect()
+    BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+20)
+    SCREEN.blit(BG_TEXT4, BG_TEXT_RECT4)
+    BG_TEXT5 = LETTER_FONT.render("""Press b if your BOOORRINGG (lame)""", True, "black", "white")
+    BG_TEXT_RECT5 = BG_TEXT5.get_rect()
+    BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
+    SCREEN.blit(BG_TEXT5, BG_TEXT_RECT5)
+screentext()
 
 #If we need buttons
 """button_surface = pygame.image.load("bg_folder/button.jpg")
@@ -191,7 +193,8 @@ def check_guess(guess, answer):
 
 #def reset():
     #resets variables
-    
+
+
 
 while True:
         for event in pygame.event.get():
