@@ -38,8 +38,8 @@ BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG")
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
-CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+WORDS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
+WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
@@ -195,7 +195,7 @@ while True:
                     SCREEN.blit(FOOD_BG, FOOD_RECT)
                     wordle_start == True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-                    SCREEN.blit(CATS_BG, CATS_RECT)
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     wordle_start == True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
