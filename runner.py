@@ -38,7 +38,7 @@ BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG")
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-WORDS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
+WORDS_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
@@ -54,11 +54,11 @@ SCREEN.fill("white")
 
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 wordle_start = False
-BG_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background."""
-                             """Press 1 for a beachy vibe"""
-                             """Press 2 if you're hungry"""
-                             """Press 3 if you're a furry"""
-                             """Press Enter if your boring (lameeee)""", True, "black", "white")
+BG_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.
+                                Press 1 for a beachy vibe
+                                Press 2 if you're hungry
+                                Press 3 if you're a furry
+                                Press Enter if your boring (lameeee)""", True, "black", "white")
 BG_TEXT_RECT = BG_TEXT.get_rect()
 BG_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
 SCREEN.blit(BG_TEXT, BG_TEXT_RECT)
