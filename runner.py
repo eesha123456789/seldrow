@@ -25,6 +25,17 @@ pygame.init() #initializes all modules to get everything started
 
 #constants
 
+
+# Different Screens Images
+BEACH_BG = pygame.image.load("bg_folder/beach_bg.jpg") 
+BEACH_RECT = BEACH_BG.get_rect(center=(500, 300)) 
+FOOD_BG = pygame.image.load("bg_folder/food_bg.jpg") 
+FOOD_RECT = FOOD_BG.get_rect(center=(500, 300)) 
+WORDS_BG = pygame.image.load("bg_folder/words_bg.PNG") 
+WORDS_RECT = WORDS_BG.get_rect(center=(500, 300)) 
+BACKGROUND = pygame.image.load("blankwordle.png")
+BACKGROUND_RECT = BACKGROUND.get_rect(center=(500, 300)) 
+
 #hex colors
 GREEN = "#77DD77"
 YELLOW = "#fdfd96"
@@ -33,22 +44,27 @@ OUTLINE = "#cfcfcf"
 
 WIDTH, HEIGHT = 800, 660
 
-
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-BACKGROUND = pygame.image.load("blankwordle.png")  #adds background image
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(500, 300)) 
 
 pygame.display.set_caption("Seldrow!")
 
 SCREEN.fill("white")
 
-# Different Screens
-BEACH_BG = pygame.image.load("bg_folder/beach_bg.jpg") 
-FOOD_BG = pygame.image.load("bg_folder/food_bg.jpg") 
-WORDS_BG = pygame.image.load("bg_folder/words_bg.PNG") 
 
-button_surface = pygame.image.load("bg_folder/button.jpg")
+LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
+wordle_start = False
+BG_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background."""
+                             """Press 1 for a beachy vibe"""
+                             """Press 2 if you're hungry"""
+                             """Press 3 if you're a furry"""
+                             """Press Enter if your boring (lameeee)""", True, "black", "white")
+BG_TEXT_RECT = BG_TEXT.get_rect()
+BG_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
+SCREEN.blit(BG_TEXT, BG_TEXT_RECT)
+
+#If we need buttons
+"""button_surface = pygame.image.load("bg_folder/button.jpg")
 button_surface = pygame.transform.scale(button_surface, (250, 100))
 beach_button=Button()
 beach_button._init_(button_surface, 150, 100, "Beach Background")
@@ -60,11 +76,8 @@ SCREEN.blit(button_surface, food_button)
 
 words_button=Button()
 words_button._init_(button_surface, 150, 500, "Words Background")
-SCREEN.blit(button_surface, words_button)
+SCREEN.blit(button_surface, words_button)"""
 
-
-
-SCREEN.blit(BACKGROUND, BACKGROUND_RECT) #place image onto the screen
 
 pygame.display.update() #whole window is updated
 
@@ -72,7 +85,6 @@ pygame.display.update() #whole window is updated
 LETTER_X_SPACING = 0
 LETTER_Y_SPACING = 0
 LETTER_SIZE = 0
-LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 
 # Global variables
 
@@ -175,8 +187,22 @@ while True:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if beach_button.checkForInput(WORDLE_POS_MOUSE):
-                    SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+            if wordle_start == False:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                    SCREEN.blit(BEACH_BG, BEACH_RECT)
+                    wordle_start == True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                    SCREEN.blit(FOOD_BG, FOOD_RECT)
+                    wordle_start == True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    wordle_start == True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    wordle_start == True
+                pygame.display.update()
+           # if event.type == pygame.MOUSEBUTTONDOWN:
+            #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
+             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
        
 
