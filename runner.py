@@ -34,11 +34,11 @@ OUTLINE = "#cfcfcf"
 WIDTH, HEIGHT = 800, 660
 
 # Different Screens Images
-BEACH_BG = pygame.image.load("bg_folder/beach_bg.jpg") 
+BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG") 
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-FOOD_BG = pygame.image.load("bg_folder/food_bg.jpg") 
+FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-WORDS_BG = pygame.image.load("bg_folder/words_bg.PNG") 
+WORDS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
 WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
