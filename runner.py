@@ -12,13 +12,11 @@ class Main:
 """
 
 import pygame #user interface
-import sys #variables and functions
-import random #for random answer in words text file
 import sys #allows us to exit
-import random #for random answerWord in words
+import random #for random answer in words
 
 import main_menu 
-from button import Button
+from Button import Button
 
 pygame.init() #initializes all modules to get everything started
 
