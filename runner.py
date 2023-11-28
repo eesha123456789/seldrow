@@ -36,8 +36,8 @@ BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG")
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-WORDS_BG = pygame.image.load("bg_folder/food_bg.JPG") 
-WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
+CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
@@ -52,14 +52,23 @@ SCREEN.fill("white")
 
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 wordle_start = False
-BG_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.
-                                Press 1 for a beachy vibe
-                                Press 2 if you're hungry
-                                Press 3 if you're a furry
-                                Press Enter if your boring (lameeee)""", True, "black", "white")
-BG_TEXT_RECT = BG_TEXT.get_rect()
-BG_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
-SCREEN.blit(BG_TEXT, BG_TEXT_RECT)
+def initialWordle():
+    BG_TEXT1 = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
+    BG_TEXT_RECT1 = BG_TEXT1.get_rect()
+    BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-40)
+    BG_TEXT2 = LETTER_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
+    BG_TEXT_RECT2 = BG_TEXT2.get_rect()
+    BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-20)
+    BG_TEXT3 = LETTER_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
+    BG_TEXT_RECT3 = BG_TEXT3.get_rect()
+    BG_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2)
+    BG_TEXT4 = LETTER_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
+    BG_TEXT_RECT4 = BG_TEXT4.get_rect()
+    BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+20)
+    BG_TEXT5 = LETTER_FONT.render("""Press Enter if your boring (lameeee)""", True, "black", "white")
+    BG_TEXT_RECT5 = BG_TEXT5.get_rect()
+    BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
+initialWordle()
 
 #If we need buttons
 """button_surface = pygame.image.load("bg_folder/button.jpg")
@@ -203,8 +212,11 @@ def delete_letter():
     del(guesses[guesses_count - 1][len(current_guess) - 1])
     current_letter_x -= LETTER_X_SPACING  
 
-
+def end_display():
+    #end screen
+    
 #def reset():
+
     #resets variables after each game
     
     
@@ -217,16 +229,16 @@ while True:
         if wordle_start == False:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                 SCREEN.blit(BEACH_BG, BEACH_RECT)
-                wordle_start == True
+                wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
                 SCREEN.blit(FOOD_BG, FOOD_RECT)
-                wordle_start == True
+                wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-                SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                wordle_start == True
+                SCREEN.blit(CATS_BG, CATS_RECT)
+                wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
                 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                wordle_start == True
+                wordle_start = True
             pygame.display.update()
         # if event.type == pygame.MOUSEBUTTONDOWN:
         #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
