@@ -10,7 +10,7 @@ class Main:
         words = file.read().splitlines()
     wordAnswer = random.choice(words)
 """
-
+from array import *
 import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
@@ -80,9 +80,9 @@ SCREEN.blit(button_surface, words_button)"""
 pygame.display.update() #whole window is updated
 
 
-LETTER_X_SPACING = 0
-LETTER_Y_SPACING = 0
-LETTER_SIZE = 0
+LETTER_X_SPACING = 80
+LETTER_Y_SPACING = 10
+LETTER_SIZE = 75
 
 # Global variables
 
@@ -92,8 +92,11 @@ guesses_count = 0
 # The list will be iterated through so each letter in each guess will be drawn on the screen.
 guesses = [[]] * 6
 
+#value needs to be tuned
+current_letter_x = 100
 current_guess = []
 current_guess_string = ""
+
 
 game_result = ""
 
@@ -139,7 +142,7 @@ class WordleLetter:
     
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
-    global current_guess, guesses_count, current_guess_string, game_result
+    global current_guess, guesses_count, current_guess_string, game_result, current_letter_x
 
     all_correct = True
     
@@ -166,18 +169,31 @@ def check_guess(guess, answer):
         game_result = "L"
 
     guesses_count += 1
+    current_letter_x = 100
     current_guess = []
     current_guess_string = ""
         
 
-#def add_new_letter():
+def add_new_letter():
     #adds new letter to the guess
+    global current_letter_x, current_guess_string, current_guess, guesses
+    new_letter = WordleLetter(key_pressed, (current_letter_x, guesses_count * 80 + LETTER_Y_SPACING))
+    current_letter_x += LETTER_X_SPACING
+    current_guess_string += key_pressed
+    
 
-#def delete_letter():
+def delete_letter():
     #deletes letter from guess
+    global current_letter_x, current_guess_string, current_guess, guesses
+    current_guess.pop()
+    current_guess_string = current_guess_string[:-1]
+    #need to double check this
+    del(guesses[guesses_count - 1][len(current_guess) - 1])
+    current_letter_x -= LETTER_X_SPACING  
 
-#def reset():
-    #resets variables
+
+def reset():
+    #resets variables after each game
     
 
 while True:
