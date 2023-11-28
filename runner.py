@@ -18,6 +18,10 @@ import sys #allows us to exit
 import random #for random answerWord in words
 
 import main_menu 
+<<<<<<< Updated upstream
+=======
+from button import Button
+>>>>>>> Stashed changes
 
 pygame.init() #initializes all modules to get everything started
 
@@ -37,8 +41,13 @@ BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG")
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+<<<<<<< Updated upstream
 CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
 CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+=======
+WORDS_BG = pygame.image.load("bg_folder/food_bg.JPG") 
+WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+>>>>>>> Stashed changes
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
@@ -53,6 +62,7 @@ SCREEN.fill("white")
 
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 wordle_start = False
+<<<<<<< Updated upstream
 def screentext():
     BG_TEXT1 = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
     BG_TEXT_RECT1 = BG_TEXT1.get_rect()
@@ -75,6 +85,16 @@ def screentext():
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
     SCREEN.blit(BG_TEXT5, BG_TEXT_RECT5)
 screentext()
+=======
+BG_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.
+                                Press 1 for a beachy vibe
+                                Press 2 if you're hungry
+                                Press 3 if you're a furry
+                                Press Enter if your boring (lameeee)""", True, "black", "white")
+BG_TEXT_RECT = BG_TEXT.get_rect()
+BG_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
+SCREEN.blit(BG_TEXT, BG_TEXT_RECT)
+>>>>>>> Stashed changes
 
 #If we need buttons
 """button_surface = pygame.image.load("bg_folder/button.jpg")
@@ -193,8 +213,12 @@ def check_guess(guess, answer):
 
 #def reset():
     #resets variables
+<<<<<<< Updated upstream
 
 
+=======
+    
+>>>>>>> Stashed changes
 
 while True:
         for event in pygame.event.get():
@@ -203,6 +227,7 @@ while True:
                 sys.exit()
             if wordle_start == False:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+<<<<<<< Updated upstream
                     SCREEN.fill("white")
                     SCREEN.blit(BEACH_BG, BEACH_RECT)
                     wordle_start == True
@@ -218,6 +243,27 @@ while True:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     wordle_start == True
+=======
+                    SCREEN.blit(BEACH_BG, BEACH_RECT)
+                    wordle_start = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                    SCREEN.blit(FOOD_BG, FOOD_RECT)
+                    wordle_start = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+<<<<<<< Updated upstream
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    wordle_start == True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
+=======
+                    SCREEN.fill("white")
+                    SCREEN.blit(CATS_BG, CATS_RECT)
+                    wordle_start = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                    SCREEN.fill("white")
+>>>>>>> Stashed changes
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    wordle_start = True
+>>>>>>> Stashed changes
                 pygame.display.update()
            # if event.type == pygame.MOUSEBUTTONDOWN:
             #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
