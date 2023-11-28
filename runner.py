@@ -8,9 +8,9 @@ class Main:
     words = []
     with open("words.txt", "r") as file:
         words = file.read().splitlines()
-    wordAnswer = random.choice(words)
+    answer = random.choice(words)
 """
-
+from array import *
 import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
@@ -36,8 +36,8 @@ BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG")
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-WORDS_BG = pygame.image.load("bg_folder/food_bg.JPG") 
-WORDS_RECT = WORDS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
+CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
@@ -52,14 +52,23 @@ SCREEN.fill("white")
 
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
 wordle_start = False
-BG_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.
-                                Press 1 for a beachy vibe
-                                Press 2 if you're hungry
-                                Press 3 if you're a furry
-                                Press Enter if your boring (lameeee)""", True, "black", "white")
-BG_TEXT_RECT = BG_TEXT.get_rect()
-BG_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
-SCREEN.blit(BG_TEXT, BG_TEXT_RECT)
+def initialWordle():
+    BG_TEXT1 = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
+    BG_TEXT_RECT1 = BG_TEXT1.get_rect()
+    BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-40)
+    BG_TEXT2 = LETTER_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
+    BG_TEXT_RECT2 = BG_TEXT2.get_rect()
+    BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-20)
+    BG_TEXT3 = LETTER_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
+    BG_TEXT_RECT3 = BG_TEXT3.get_rect()
+    BG_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2)
+    BG_TEXT4 = LETTER_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
+    BG_TEXT_RECT4 = BG_TEXT4.get_rect()
+    BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+20)
+    BG_TEXT5 = LETTER_FONT.render("""Press Enter if your boring (lameeee)""", True, "black", "white")
+    BG_TEXT_RECT5 = BG_TEXT5.get_rect()
+    BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
+initialWordle()
 
 #If we need buttons
 """button_surface = pygame.image.load("bg_folder/button.jpg")
@@ -80,11 +89,17 @@ SCREEN.blit(button_surface, words_button)"""
 pygame.display.update() #whole window is updated
 
 
-LETTER_X_SPACING = 0
-LETTER_Y_SPACING = 0
-LETTER_SIZE = 0
+LETTER_X_SPACING = 80
+LETTER_Y_SPACING = 10
+LETTER_SIZE = 75
 
 # Global variables
+
+#not sure if this is is right
+words = []
+with open("words.txt", "r") as file:
+    words = file.read().splitlines()
+current_answer = random.choice(words)
 
 guesses_count = 0
 
@@ -92,8 +107,11 @@ guesses_count = 0
 # The list will be iterated through so each letter in each guess will be drawn on the screen.
 guesses = [[]] * 6
 
+#value needs to be tuned
+current_letter_x = 100
 current_guess = []
 current_guess_string = ""
+
 
 game_result = ""
 
@@ -139,7 +157,7 @@ class WordleLetter:
     
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
-    global current_guess, guesses_count, current_guess_string, game_result
+    global current_guess, guesses_count, current_guess_string, game_result, current_letter_x
 
     all_correct = True
     
@@ -166,18 +184,41 @@ def check_guess(guess, answer):
         game_result = "L"
 
     guesses_count += 1
+    current_letter_x = 100
     current_guess = []
     current_guess_string = ""
         
 
-#def add_new_letter():
+def add_new_letter():
     #adds new letter to the guess
+    global current_letter_x, current_guess_string, current_guess, guesses
+    new_letter = WordleLetter(key_pressed, (current_letter_x, guesses_count * 80 + LETTER_Y_SPACING))
+    current_letter_x += LETTER_X_SPACING
+    current_guess_string += key_pressed
+    current_guess.append(new_letter)
+    guesses[guesses_count - 1].append(new_letter)
 
-#def delete_letter():
+    for i in guesses:
+        for j in i:
+            j.draw()
+    
+
+def delete_letter():
     #deletes letter from guess
+    global current_letter_x, current_guess_string, current_guess, guesses
+    current_guess.pop()
+    current_guess_string = current_guess_string[:-1]
+    #need to double check this
+    del(guesses[guesses_count - 1][len(current_guess) - 1])
+    current_letter_x -= LETTER_X_SPACING  
 
+#def end_display():
+    #end screen
+    
 #def reset():
-    #resets variables
+
+    #resets variables after each game
+    
     
 
 while True:
@@ -203,5 +244,46 @@ while True:
            # if event.type == pygame.MOUSEBUTTONDOWN:
             #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
              #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if wordle_start == False:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                    SCREEN.blit(BEACH_BG, BEACH_RECT)
+                    wordle_start = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                    SCREEN.blit(FOOD_BG, FOOD_RECT)
+                    wordle_start = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                    SCREEN.blit(CATS_BG, CATS_RECT)
+                    wordle_start = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    wordle_start = True
+                pygame.display.update()
+            # if event.type == pygame.MOUSEBUTTONDOWN:
+            #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
+                #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    #if game is finished
+                    if game_result != "":
+                        reset()
+                    else:
+                        if len(current_guess) == 5:
+                            check_guess(current_guess, current_answer)
+                
+                elif event.key == pygame.K_BACKSPACE:
+                    if len(current_guess) > 0:
+                        delete_letter()
+                else:
+                    key_pressed = event.unicode.lower()
+                    if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
+                        if len(current_guess) < 5:
+                            add_new_letter()
+
+            
        
 
