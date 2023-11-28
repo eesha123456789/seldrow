@@ -8,9 +8,9 @@ class Main:
     words = []
     with open("words.txt", "r") as file:
         words = file.read().splitlines()
-    wordAnswer = random.choice(words)
+    answer = random.choice(words)
 """
-
+from array import *
 import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
@@ -80,11 +80,17 @@ SCREEN.blit(button_surface, words_button)"""
 pygame.display.update() #whole window is updated
 
 
-LETTER_X_SPACING = 0
-LETTER_Y_SPACING = 0
-LETTER_SIZE = 0
+LETTER_X_SPACING = 80
+LETTER_Y_SPACING = 10
+LETTER_SIZE = 75
 
 # Global variables
+
+#not sure if this is is right
+words = []
+with open("words.txt", "r") as file:
+    words = file.read().splitlines()
+current_answer = random.choice(words)
 
 guesses_count = 0
 
@@ -92,8 +98,11 @@ guesses_count = 0
 # The list will be iterated through so each letter in each guess will be drawn on the screen.
 guesses = [[]] * 6
 
+#value needs to be tuned
+current_letter_x = 100
 current_guess = []
 current_guess_string = ""
+
 
 game_result = ""
 
@@ -139,7 +148,7 @@ class WordleLetter:
     
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
-    global current_guess, guesses_count, current_guess_string, game_result
+    global current_guess, guesses_count, current_guess_string, game_result, current_letter_x
 
     all_correct = True
     
@@ -166,41 +175,82 @@ def check_guess(guess, answer):
         game_result = "L"
 
     guesses_count += 1
+    current_letter_x = 100
     current_guess = []
     current_guess_string = ""
         
 
-#def add_new_letter():
+def add_new_letter():
     #adds new letter to the guess
+    global current_letter_x, current_guess_string, current_guess, guesses
+    new_letter = WordleLetter(key_pressed, (current_letter_x, guesses_count * 80 + LETTER_Y_SPACING))
+    current_letter_x += LETTER_X_SPACING
+    current_guess_string += key_pressed
+    current_guess.append(new_letter)
+    guesses[guesses_count - 1].append(new_letter)
 
-#def delete_letter():
+    for i in guesses:
+        for j in i:
+            j.draw()
+    
+
+def delete_letter():
     #deletes letter from guess
+    global current_letter_x, current_guess_string, current_guess, guesses
+    current_guess.pop()
+    current_guess_string = current_guess_string[:-1]
+    #need to double check this
+    del(guesses[guesses_count - 1][len(current_guess) - 1])
+    current_letter_x -= LETTER_X_SPACING  
+
 
 #def reset():
-    #resets variables
+    #resets variables after each game
+    
     
 
 while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if wordle_start == False:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-                    SCREEN.blit(BEACH_BG, BEACH_RECT)
-                    wordle_start == True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                    SCREEN.blit(FOOD_BG, FOOD_RECT)
-                    wordle_start == True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                    wordle_start == True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
-                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                    wordle_start == True
-                pygame.display.update()
-           # if event.type == pygame.MOUSEBUTTONDOWN:
-            #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
-             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if wordle_start == False:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                SCREEN.blit(BEACH_BG, BEACH_RECT)
+                wordle_start == True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                SCREEN.blit(FOOD_BG, FOOD_RECT)
+                wordle_start == True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                wordle_start == True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
+                SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                wordle_start == True
+            pygame.display.update()
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
+            #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                #if game is finished
+                if game_result != "":
+                    reset()
+                else:
+                    if len(current_guess) == 5:
+                        check_guess(current_guess, current_answer)
+            
+            elif event.key == pygame.K_BACKSPACE:
+                if len(current_guess) > 0:
+                    delete_letter()
+            else:
+                key_pressed = event.unicode.lower()
+                if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
+                    if len(current_guess) < 5:
+                        add_new_letter()
+
+            
+    
        
 
