@@ -1,5 +1,5 @@
 import pygame
-from button import Button
+from Button import Button
 import runner
 pygame.init()
 
