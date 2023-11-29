@@ -54,27 +54,28 @@ pygame.display.set_caption("Seldrow!")
 
 SCREEN.fill("white")
 
-
-LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf")
+# 2nd parameter is the font size
+LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf", 50)
+DISPLAY_FONT = pygame.font.Font("FredokaOne-Regular.otf", 30)
 wordle_start = False
 def initialWordle():
-    BG_TEXT1 = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
+    BG_TEXT1 = DISPLAY_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
     BG_TEXT_RECT1 = BG_TEXT1.get_rect()
     BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-40)
     SCREEN.blit(BG_TEXT1,BG_TEXT_RECT1)
-    BG_TEXT2 = LETTER_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
+    BG_TEXT2 = DISPLAY_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
     BG_TEXT_RECT2 = BG_TEXT2.get_rect()
     BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-20)
     SCREEN.blit(BG_TEXT2,BG_TEXT_RECT2)
-    BG_TEXT3 = LETTER_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
+    BG_TEXT3 = DISPLAY_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
     BG_TEXT_RECT3 = BG_TEXT3.get_rect()
     BG_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2)
     SCREEN.blit(BG_TEXT3,BG_TEXT_RECT3)
-    BG_TEXT4 = LETTER_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
+    BG_TEXT4 = DISPLAY_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
     BG_TEXT_RECT4 = BG_TEXT4.get_rect()
     BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+20)
     SCREEN.blit(BG_TEXT4,BG_TEXT_RECT4)
-    BG_TEXT5 = LETTER_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
+    BG_TEXT5 = DISPLAY_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
@@ -100,7 +101,7 @@ pygame.display.update() #whole window is updated
 
 #finished tuning, may need to change y val
 LETTER_X_SPACING = 83
-LETTER_Y_SPACING = 10
+LETTER_Y_SPACING = 50
 LETTER_SIZE = 69
 
 # Global variables
@@ -141,9 +142,11 @@ class WordleLetter:
         self.bg_y = bg_position[1]
         self.text = text
         self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
-        self.text_position = (self.bg_x, self.bg_y)
+        #might need more tuning to center the letters
+        self.text_position = (self.bg_x + 30, self.bg_y + 30)
+
         self.surface = LETTER_FONT.render(self.text, True, self.text_color)
-        self.text_rect = self.surface.get_rect(center=self.text_position)
+        self.text_rect = self.surface.get_rect(center = self.text_position)
 
     def draw(self):
         # Puts the letter on the screen at the desired positions.
@@ -155,7 +158,6 @@ class WordleLetter:
         #WORDLE_MAIN_MENU = button.Button(pos = (400,300), text_input = "Main Menu")
         #WORDLE_MAIN_MENU.changeColor(WORDLE_POS_MOUSE)
         #WORDLE_MAIN_MENU.update(SCREEN)
-        
         
         pygame.display.update()
 
@@ -261,6 +263,7 @@ while True:
                 sys.exit()
             if wordle_start == False:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                    SCREEN.fill("white")
                     SCREEN.blit(BEACH_BG, BEACH_RECT)
                     wordle_start == True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
@@ -268,9 +271,11 @@ while True:
                     SCREEN.blit(FOOD_BG, FOOD_RECT)
                     wordle_start == True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                    SCREEN.fill("white")
                     SCREEN.blit(CATS_BG, CATS_RECT)
                     wordle_start == True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                    SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     wordle_start == True
                 pygame.display.update()
