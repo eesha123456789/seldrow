@@ -25,7 +25,7 @@ pygame.init() #initializes all modules to get everything started
 
 #hex colors
 GREEN = "#77DD77"
-YELLOW = "#fdfd96"
+YELLOW = "#FFDF00"
 GREY = "#787c7e"
 OUTLINE = "#cfcfcf"
 
@@ -98,10 +98,10 @@ SCREEN.blit(button_surface, words_button)"""
 
 pygame.display.update() #whole window is updated
 
-
-LETTER_X_SPACING = 80
+#finished tuning, may need to change y val
+LETTER_X_SPACING = 83
 LETTER_Y_SPACING = 10
-LETTER_SIZE = 70
+LETTER_SIZE = 69
 
 # Global variables
 
@@ -118,7 +118,7 @@ guesses_count = 0
 guesses = [[]] * 6
 
 #value needs to be tuned
-letter_x_pos = 100
+letter_x_pos = 205
 current_guess = []
 current_guess_string = ""
 
@@ -173,19 +173,20 @@ def check_guess(guess, answer):
     
     #iterate through each letter in the guess
     for i in range(5):
-        cur_letter = guess[i]
+        cur_letter = guess[i].text.lower()
         if cur_letter == answer[i]:
-            cur_letter.bg_color = GREEN
-            cur_letter.text_color = "white"
+            guess[i].bg_color = GREEN
+            guess[i].text_color = "white"
         elif cur_letter in answer:
-            cur_letter.bg_color = YELLOW
-            cur_letter.text_color = "white"
+            guess[i].bg_color = YELLOW
+            guess[i].text_color = "white"
             all_correct = False
         else: #letter not in answer
-            cur_letter.bg_color = GREY
-            cur_letter.text_color = "white"
+            guess[i].bg_color = GREY
+            guess[i].text_color = "white"
             all_correct = False
 
+        guess[i].draw()
         pygame.display.update()
 
     if all_correct == True:
@@ -230,12 +231,11 @@ def end_display():
         SCREEN.blit(WORDLE_LOSS, WORDLE_LOSS_RECT)
         LOSS_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
         LOSS_TEXT_RECT = LOSS_TEXT.get_rect()
-        LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2+40)
+        LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 40)
     pygame.display.update()
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_ENTER:
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
         reset()
 
-    
     
 def reset():
     #resets variables after each game
@@ -305,6 +305,7 @@ while True:
 
             if event.type == pygame.KEYDOWN:
                 print(event.key)
+                print(current_answer)
                 if event.key == pygame.K_RETURN:
                     #if game is finished
                     if game_result != "":
