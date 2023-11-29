@@ -101,7 +101,7 @@ pygame.display.update() #whole window is updated
 
 LETTER_X_SPACING = 80
 LETTER_Y_SPACING = 10
-LETTER_SIZE = 75
+LETTER_SIZE = 70
 
 # Global variables
 
@@ -118,17 +118,19 @@ guesses_count = 0
 guesses = [[]] * 6
 
 #value needs to be tuned
-current_letter_x = 100
+letter_x_pos = 100
 current_guess = []
 current_guess_string = ""
 
 
 game_result = ""
 
+wordle_start = False
 
 #Main Menu Button
 WORDLE_POS_MOUSE = pygame.mouse.get_pos()
 #WORDLE_MAIN_MENU=button.Button()
+
 
 class WordleLetter:
     def __init__(self, text, bg_position):
@@ -140,17 +142,15 @@ class WordleLetter:
         self.text = text
         self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
         self.text_position = (self.bg_x, self.bg_y)
-        self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
-        self.text_rect = self.text_surface.get_rect(center=self.text_position)
+        self.surface = LETTER_FONT.render(self.text, True, self.text_color)
+        self.text_rect = self.surface.get_rect(center=self.text_position)
 
     def draw(self):
         # Puts the letter on the screen at the desired positions.
         pygame.draw.rect(SCREEN, self.bg_color, self.bg_rect)
-        self.text_surface = LETTER_FONT.render(self.text, True, self.text_color)
-        SCREEN.blit(self.text_surface, self.text_rect)
-        
+        self.surface = LETTER_FONT.render(self.text, True, self.text_color)
+        SCREEN.blit(self.surface, self.text_rect)
 
-        
         #For Main Menu
         #WORDLE_MAIN_MENU = button.Button(pos = (400,300), text_input = "Main Menu")
         #WORDLE_MAIN_MENU.changeColor(WORDLE_POS_MOUSE)
@@ -167,23 +167,23 @@ class WordleLetter:
     
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
-    global current_guess, guesses_count, current_guess_string, game_result, current_letter_x
+    global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos
 
     all_correct = True
     
     #iterate through each letter in the guess
     for i in range(5):
-        cur_letter = guess[i].lower()
-        if guess[i] == answer[i]:
-            guess[i].bg_color = GREEN
-            guess[i].text_color = "white"
-        elif guess[i] in answer:
-            guess[i].bg_color = YELLOW
-            guess[i].text_color = "white"
+        cur_letter = guess[i]
+        if cur_letter == answer[i]:
+            cur_letter.bg_color = GREEN
+            cur_letter.text_color = "white"
+        elif cur_letter in answer:
+            cur_letter.bg_color = YELLOW
+            cur_letter.text_color = "white"
             all_correct = False
         else: #letter not in answer
-            guess[i].bg_color = GREY
-            guess[i].text_color = "white"
+            cur_letter.bg_color = GREY
+            cur_letter.text_color = "white"
             all_correct = False
 
         pygame.display.update()
@@ -194,16 +194,16 @@ def check_guess(guess, answer):
         game_result = "L"
 
     guesses_count += 1
-    current_letter_x = 100
+    letter_x_pos = 100
     current_guess = []
     current_guess_string = ""
         
 
 def add_new_letter():
     #adds new letter to the guess
-    global current_letter_x, current_guess_string, current_guess, guesses
-    new_letter = WordleLetter(key_pressed, (current_letter_x, guesses_count * 80 + LETTER_Y_SPACING))
-    current_letter_x += LETTER_X_SPACING
+    global letter_x_pos, current_guess_string, current_guess, guesses
+    new_letter = WordleLetter(key_pressed, (letter_x_pos, guesses_count * 80 + LETTER_Y_SPACING))
+    letter_x_pos += LETTER_X_SPACING
     current_guess_string += key_pressed
     current_guess.append(new_letter)
     guesses[guesses_count - 1].append(new_letter)
@@ -215,12 +215,13 @@ def add_new_letter():
 
 def delete_letter():
     #deletes letter from guess
-    global current_letter_x, current_guess_string, current_guess, guesses
+    global letter_x_pos, current_guess_string, current_guess, guesses
     current_guess.pop()
     current_guess_string = current_guess_string[:-1]
     #need to double check this
     del(guesses[guesses_count - 1][len(current_guess) - 1])
-    current_letter_x -= LETTER_X_SPACING  
+    letter_x_pos -= LETTER_X_SPACING  
+    pygame.display.update()
 
 def end_display():
     if game_result == "W":
@@ -231,25 +232,26 @@ def end_display():
         LOSS_TEXT_RECT = LOSS_TEXT.get_rect()
         LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2+40)
     pygame.display.update()
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_ENTER:
+        reset()
 
     
     
 def reset():
     #resets variables after each game
-    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result
+    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start
     
     SCREEN.fill("white")
     initialWordle()
-    wordle_start=False
+    wordle_start = False
     pygame.display.update()
 
     guesses_count = 0
-    CORRECT_WORD = random.choice(words)
+    current_answer = random.choice(words)
     guesses = [[]] * 6
     current_guess = []
     current_guess_string = ""
     game_result = ""
-    
     
 
 while True:
@@ -302,21 +304,22 @@ while True:
                 #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
 
             if event.type == pygame.KEYDOWN:
+                print(event.key)
                 if event.key == pygame.K_RETURN:
                     #if game is finished
                     if game_result != "":
-                        reset()
+                        end_display()
                     else:
-                        if len(current_guess) == 5:
+                        if len(current_guess_string) == 5:
                             check_guess(current_guess, current_answer)
                 
                 elif event.key == pygame.K_BACKSPACE:
-                    if len(current_guess) > 0:
+                    if len(current_guess_string) > 0:
                         delete_letter()
                 else:
                     key_pressed = event.unicode.lower()
                     if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
-                        if len(current_guess) < 5:
+                        if len(current_guess_string) < 5:
                             add_new_letter()
 
             
