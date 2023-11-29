@@ -75,7 +75,7 @@ def initialWordle():
     BG_TEXT_RECT4 = BG_TEXT4.get_rect()
     BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+50)
     SCREEN.blit(BG_TEXT4,BG_TEXT_RECT4)
-    BG_TEXT5 = DISPLAY_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
+    BG_TEXT5 = DISPLAY_FONT.render("""Press 0 if your BORRINGG (lameeee)""", True, "black", "white")
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
@@ -165,6 +165,7 @@ class WordleLetter:
         pygame.draw.rect(SCREEN, "white", self.bg_rect)
         pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
         pygame.display.update()
+        
     
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
@@ -218,26 +219,18 @@ def add_new_letter():
 def delete_letter():
     #deletes letter from guess
     global letter_x_pos, current_guess_string, current_guess, guesses
-    current_guess.pop()
     current_guess_string = current_guess_string[:-1]
     #need to double check this
     del(guesses[guesses_count - 1][len(current_guess) - 1])
-    letter_x_pos -= LETTER_X_SPACING  
-    pygame.display.update()
-
-def end_display():
-    if game_result == "W":
-        SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
-    elif game_result == "L":
-        SCREEN.blit(WORDLE_LOSS, WORDLE_LOSS_RECT)
-        LOSS_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
-        LOSS_TEXT_RECT = LOSS_TEXT.get_rect()
-        LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 40)
-    pygame.display.update()
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-        reset()
-
+    letter_x_pos -= LETTER_X_SPACING 
+    #just added
+    current_guess[len(current_guess) - 1].bg_color = "white"
+    current_guess[len(current_guess) - 1].text_color = "white"
+    current_guess[len(current_guess) - 1].draw()
     
+    pygame.display.update()
+    current_guess.pop()
+
 def reset():
     #resets variables after each game
     global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start
@@ -254,6 +247,18 @@ def reset():
     current_guess = []
     current_guess_string = ""
     game_result = ""
+    
+def end_display():
+    if game_result == "W":
+        SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
+    elif game_result == "L":
+        SCREEN.blit(WORDLE_LOSS, WORDLE_LOSS_RECT)
+        LOSS_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
+        LOSS_TEXT_RECT = LOSS_TEXT.get_rect()
+        LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 40)
+    pygame.display.update()
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+        reset()
     
 
 while True:
@@ -282,25 +287,26 @@ while True:
         # if event.type == pygame.MOUSEBUTTONDOWN:
         #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
-        if event.type == pygame.KEYDOWN:
-            print(event.key)
-            print(current_answer)
-            if event.key == pygame.K_RETURN:
-                #if game is finished
-                if game_result != "":
-                    end_display()
+        if wordle_start == True:
+            if event.type == pygame.KEYDOWN:
+                print(event.key)
+                print(current_answer)
+                if event.key == pygame.K_RETURN:
+                    #if game is finished
+                    if game_result != "":
+                        end_display()
+                    else:
+                        if len(current_guess_string) == 5:
+                            check_guess(current_guess, current_answer)
+                
+                elif event.key == pygame.K_BACKSPACE:
+                    if len(current_guess_string) > 0:
+                        delete_letter()
                 else:
-                    if len(current_guess_string) == 5:
-                        check_guess(current_guess, current_answer)
-            
-            elif event.key == pygame.K_BACKSPACE:
-                if len(current_guess_string) > 0:
-                    delete_letter()
-            else:
-                key_pressed = event.unicode.lower()
-                if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
-                    if len(current_guess_string) < 5:
-                        add_new_letter()
+                    key_pressed = event.unicode.lower()
+                    if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
+                        if len(current_guess_string) < 5:
+                            add_new_letter()
 
             
        
