@@ -57,6 +57,7 @@ SCREEN.fill("white")
 # 2nd parameter is the font size
 LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf", 50)
 DISPLAY_FONT = pygame.font.Font("FredokaOne-Regular.otf", 30)
+RESULT_FONT = pygame.font.Font("FredokaOne-Regular.otf", 60)
 wordle_start = False
 def initialWordle():
     BG_TEXT1 = DISPLAY_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
@@ -99,9 +100,14 @@ SCREEN.blit(button_surface, words_button)"""
 
 pygame.display.update() #whole window is updated
 
-#finished tuning, may need to change y val
+#distance from the left for the first letter
+letter_x_pos = 205
+#distance from the top of the screen fro the first row
+letter_y_pos = 52
+#between each letter in a row
 LETTER_X_SPACING = 83
-LETTER_Y_SPACING = 52
+#between each row
+LETTER_Y_SPACING = 20
 LETTER_SIZE = 69
 
 # Global variables
@@ -118,8 +124,6 @@ guesses_count = 0
 # The list will be iterated through so each letter in each guess will be drawn on the screen.
 guesses = [[]] * 6
 
-#value needs to be tuned
-letter_x_pos = 205
 current_guess = []
 current_guess_string = ""
 
@@ -169,7 +173,7 @@ class WordleLetter:
     
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
-    global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos
+    global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos, letter_y_pos
 
     all_correct = True
     
@@ -193,19 +197,22 @@ def check_guess(guess, answer):
 
     if all_correct == True:
         game_result = "W"
-    else:
+        end_display()
+    elif all_correct == False and guesses_count >= 5:
         game_result = "L"
+        end_display()
 
     guesses_count += 1
     letter_x_pos = 205
+    letter_y_pos += LETTER_Y_SPACING
     current_guess = []
     current_guess_string = ""
         
 
 def add_new_letter():
     #adds new letter to the guess
-    global letter_x_pos, current_guess_string, current_guess, guesses
-    new_letter = WordleLetter(key_pressed, (letter_x_pos, guesses_count * 80 + LETTER_Y_SPACING))
+    global letter_x_pos, current_guess_string, current_guess, guesses, letter_y_pos
+    new_letter = WordleLetter(key_pressed, (letter_x_pos, guesses_count * 80 + letter_y_pos))
     letter_x_pos += LETTER_X_SPACING
     current_guess_string += key_pressed
     current_guess.append(new_letter)
@@ -256,9 +263,15 @@ def end_display():
         LOSS_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
         LOSS_TEXT_RECT = LOSS_TEXT.get_rect()
         LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 40)
+        answer_display = RESULT_FONT.render(current_answer, True, "black", "white")
+        answer_display_rect = answer_display.get_rect()
+        answer_display_rect.center = (WIDTH // 2, HEIGHT // 2-30)
+        SCREEN.blit(answer_display, answer_display_rect)
+    
     pygame.display.update()
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-        reset()
+    if game_result != "":
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
+            reset()
     
 
 while True:
