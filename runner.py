@@ -101,7 +101,7 @@ pygame.display.update() #whole window is updated
 
 #finished tuning, may need to change y val
 LETTER_X_SPACING = 83
-LETTER_Y_SPACING = 50
+LETTER_Y_SPACING = 52
 LETTER_SIZE = 69
 
 # Global variables
@@ -275,7 +275,6 @@ while True:
                     SCREEN.blit(CATS_BG, CATS_RECT)
                     wordle_start == True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
-                    SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     wordle_start == True
                 pygame.display.update()
