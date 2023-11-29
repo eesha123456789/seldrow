@@ -33,13 +33,13 @@ WIDTH, HEIGHT = 800, 660
 
 # Different Screens Images and Pictures
 BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG") 
-BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2+6, HEIGHT//2+8)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
-FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2+3, HEIGHT//2)) 
 CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
 CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2+6, HEIGHT//2+8)) 
 
 WORDLE_WIN = pygame.image.load("bg_folder/wordle_win.png") 
 WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2)) 
@@ -61,11 +61,11 @@ wordle_start = False
 def initialWordle():
     BG_TEXT1 = DISPLAY_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
     BG_TEXT_RECT1 = BG_TEXT1.get_rect()
-    BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-40)
+    BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-100)
     SCREEN.blit(BG_TEXT1,BG_TEXT_RECT1)
     BG_TEXT2 = DISPLAY_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
     BG_TEXT_RECT2 = BG_TEXT2.get_rect()
-    BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-20)
+    BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-50)
     SCREEN.blit(BG_TEXT2,BG_TEXT_RECT2)
     BG_TEXT3 = DISPLAY_FONT.render("""Press 2 if you're hungry""", True, "black", "white")
     BG_TEXT_RECT3 = BG_TEXT3.get_rect()
@@ -73,11 +73,11 @@ def initialWordle():
     SCREEN.blit(BG_TEXT3,BG_TEXT_RECT3)
     BG_TEXT4 = DISPLAY_FONT.render("""Press 3 if you're a furry""", True, "black", "white")
     BG_TEXT_RECT4 = BG_TEXT4.get_rect()
-    BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+20)
+    BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+50)
     SCREEN.blit(BG_TEXT4,BG_TEXT_RECT4)
     BG_TEXT5 = DISPLAY_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
-    BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+40)
+    BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
 initialWordle()
 
@@ -126,7 +126,6 @@ current_guess_string = ""
 
 game_result = ""
 
-wordle_start = False
 
 #Main Menu Button
 WORDLE_POS_MOUSE = pygame.mouse.get_pos()
@@ -197,7 +196,7 @@ def check_guess(guess, answer):
         game_result = "L"
 
     guesses_count += 1
-    letter_x_pos = 100
+    letter_x_pos = 205
     current_guess = []
     current_guess_string = ""
         
@@ -245,7 +244,8 @@ def reset():
     
     SCREEN.fill("white")
     initialWordle()
-    wordle_start = False
+    if wordle_start == True:
+        wordle_start = False
     pygame.display.update()
 
     guesses_count = 0
@@ -257,75 +257,50 @@ def reset():
     
 
 while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if wordle_start == False:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-                    SCREEN.fill("white")
-                    SCREEN.blit(BEACH_BG, BEACH_RECT)
-                    wordle_start == True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                    SCREEN.fill("white")
-                    SCREEN.blit(FOOD_BG, FOOD_RECT)
-                    wordle_start == True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-                    SCREEN.fill("white")
-                    SCREEN.blit(CATS_BG, CATS_RECT)
-                    wordle_start == True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
-                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                    wordle_start == True
-                pygame.display.update()
-           # if event.type == pygame.MOUSEBUTTONDOWN:
-            #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
-             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if wordle_start == False:
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-                    SCREEN.fill("white")
-                    SCREEN.blit(BEACH_BG, BEACH_RECT)
-                    wordle_start = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                    SCREEN.fill("white")
-                    SCREEN.blit(FOOD_BG, FOOD_RECT)
-                    wordle_start = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-                    SCREEN.fill("white")
-                    SCREEN.blit(CATS_BG, CATS_RECT)
-                    wordle_start = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_KP_ENTER:
-                    SCREEN.fill("white")
-                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                    wordle_start = True
-                pygame.display.update()
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
-                #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
-
-            if event.type == pygame.KEYDOWN:
-                print(event.key)
-                print(current_answer)
-                if event.key == pygame.K_RETURN:
-                    #if game is finished
-                    if game_result != "":
-                        end_display()
-                    else:
-                        if len(current_guess_string) == 5:
-                            check_guess(current_guess, current_answer)
-                
-                elif event.key == pygame.K_BACKSPACE:
-                    if len(current_guess_string) > 0:
-                        delete_letter()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if wordle_start == False:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                SCREEN.fill("white")
+                SCREEN.blit(BEACH_BG, BEACH_RECT)
+                wordle_start = True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                SCREEN.fill("white")
+                SCREEN.blit(FOOD_BG, FOOD_RECT)
+                wordle_start = True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                SCREEN.fill("white")
+                SCREEN.blit(CATS_BG, CATS_RECT)
+                wordle_start = True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                SCREEN.fill("white")
+                SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                wordle_start = True
+            pygame.display.update()
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
+            #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+        if event.type == pygame.KEYDOWN:
+            print(event.key)
+            print(current_answer)
+            if event.key == pygame.K_RETURN:
+                #if game is finished
+                if game_result != "":
+                    end_display()
                 else:
-                    key_pressed = event.unicode.lower()
-                    if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
-                        if len(current_guess_string) < 5:
-                            add_new_letter()
+                    if len(current_guess_string) == 5:
+                        check_guess(current_guess, current_answer)
+            
+            elif event.key == pygame.K_BACKSPACE:
+                if len(current_guess_string) > 0:
+                    delete_letter()
+            else:
+                key_pressed = event.unicode.lower()
+                if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
+                    if len(current_guess_string) < 5:
+                        add_new_letter()
 
             
        
