@@ -31,7 +31,7 @@ OUTLINE = "#cfcfcf"
 
 WIDTH, HEIGHT = 800, 660
 
-# Different Screens Images
+# Different Screens Images and Pictures
 BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG") 
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
@@ -40,6 +40,11 @@ CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG")
 CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+
+WORDLE_WIN = pygame.image.load("bg_folder/wordle_win.png") 
+WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2)) 
+WORDLE_LOSS = pygame.image.load("bg_folder/wordle_loss.png") 
+WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
 
 #Variables for set up of dislay window (how it looks)
@@ -217,12 +222,33 @@ def delete_letter():
     del(guesses[guesses_count - 1][len(current_guess) - 1])
     current_letter_x -= LETTER_X_SPACING  
 
-#def end_display():
-    #end screen
-    
-#def reset():
+def end_display():
+    if game_result == "W":
+        SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
+    elif game_result == "L":
+        SCREEN.blit(WORDLE_LOSS, WORDLE_LOSS_RECT)
+        LOSS_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
+        LOSS_TEXT_RECT = LOSS_TEXT.get_rect()
+        LOSS_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2+40)
+    pygame.display.update()
 
+    
+    
+def reset():
     #resets variables after each game
+    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result
+    
+    SCREEN.fill("white")
+    initialWordle()
+    wordle_start=False
+    pygame.display.update()
+
+    guesses_count = 0
+    CORRECT_WORD = random.choice(words)
+    guesses = [[]] * 6
+    current_guess = []
+    current_guess_string = ""
+    game_result = ""
     
     
 
