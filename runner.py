@@ -240,14 +240,15 @@ def delete_letter():
 
 def reset():
     #resets variables after each game
-    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start
+    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos
     
     SCREEN.fill("white")
     initialWordle()
     if wordle_start == True:
         wordle_start = False
     pygame.display.update()
-
+    
+    letter_y_pos = 52
     guesses_count = 0
     current_answer = random.choice(words)
     guesses = [[]] * 6
@@ -269,9 +270,6 @@ def end_display():
         SCREEN.blit(answer_display, answer_display_rect)
     
     pygame.display.update()
-    if game_result != "":
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
-            reset()
     
 
 while True:
@@ -301,6 +299,9 @@ while True:
         #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
         if wordle_start == True:
+            if game_result != "":
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    reset()
             if event.type == pygame.KEYDOWN:
                 print(event.key)
                 print(current_answer)
