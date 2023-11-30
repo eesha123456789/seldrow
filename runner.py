@@ -176,6 +176,7 @@ def check_guess(guess, answer):
     global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos, letter_y_pos
 
     all_correct = True
+    used_letters = ""
     
     #iterate through each letter in the guess
     for i in range(5):
@@ -183,7 +184,8 @@ def check_guess(guess, answer):
         if cur_letter == answer[i]:
             guess[i].bg_color = GREEN
             guess[i].text_color = "white"
-        elif cur_letter in answer:
+            used_letters += cur_letter
+        elif cur_letter in answer and cur_letter not in used_letters:
             guess[i].bg_color = YELLOW
             guess[i].text_color = "white"
             all_correct = False
