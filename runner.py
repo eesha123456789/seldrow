@@ -114,8 +114,14 @@ LETTER_SIZE = 69
 
 #not sure if this is is right
 words = []
-with open("words.txt", "r") as file:
-    words = file.read().splitlines()
+with open("wordLists/words.txt", "r") as file:
+    allWords = file.read().splitlines()
+with open("wordLists/words.txt", "r") as file:
+    animalWords = file.read().splitlines()
+with open("wordLists/words.txt", "r") as file:
+    natureWords = file.read().splitlines()
+with open("wordLists/words.txt", "r") as file:
+    foodWords = file.read().splitlines()
 current_answer = random.choice(words)
 
 guesses_count = 0
@@ -284,17 +290,21 @@ while True:
                 SCREEN.fill("white")
                 SCREEN.blit(BEACH_BG, BEACH_RECT)
                 wordle_start = True
+                current_answer = random.choice(natureWords)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
                 SCREEN.fill("white")
                 SCREEN.blit(FOOD_BG, FOOD_RECT)
+                current_answer = random.choice(foodWords)
                 wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
                 SCREEN.fill("white")
                 SCREEN.blit(CATS_BG, CATS_RECT)
+                current_answer = random.choice(animalWords)
                 wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 SCREEN.fill("white")
                 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                current_answer = random.choice(allWords)
                 wordle_start = True
             pygame.display.update()
         # if event.type == pygame.MOUSEBUTTONDOWN:
