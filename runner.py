@@ -17,8 +17,11 @@ import random #for random answer in words
 
 import main_menu 
 from button import Button
+from pygame import mixer
+
 
 pygame.init() #initializes all modules to get everything started
+mixer.init() #for music
 
 
 #constants
@@ -46,6 +49,18 @@ WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2))
 WORDLE_LOSS = pygame.image.load("bg_folder/wordle_loss.png") 
 WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
+
+#sound effects
+
+
+congrats = mixer.music.load("Sounds/test.wav")
+congrats.set_volume(0.2)
+mixer.music.load("Sounds/Congrats.mp3")
+mixer.music.load("Sounds/Elevator.mp3")
+mixer.music.load("Sounds/Error.mp3")
+mixer.music.load("Sounds/Meow.mp3")
+mixer.music.load("Sounds/Water.mp3")
+mixer.music.load("Sounds/Womp.mp3")
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -274,6 +289,7 @@ while True:
         if wordle_start == False:
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                congrats.play()
                 SCREEN.fill("white")
                 SCREEN.blit(BEACH_BG, BEACH_RECT)
                 with open("wordLists/nature.txt", "r") as natureWordsFile:
