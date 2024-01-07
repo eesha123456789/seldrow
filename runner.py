@@ -114,15 +114,8 @@ LETTER_SIZE = 69
 # Global variables
 
 words = []
-with open("wordLists/words.txt", "r") as file:
-    allWords = file.read().splitlines()
-with open("wordLists/words.txt", "r") as file:
-    animalWords = file.read().splitlines()
-with open("wordLists/words.txt", "r") as file:
-    natureWords = file.read().splitlines()
-with open("wordLists/words.txt", "r") as file:
-    foodWords = file.read().splitlines()
-current_answer = random.choice(words)
+
+
 
 guesses_count = 0
 
@@ -251,7 +244,7 @@ def reset():
     
     letter_y_pos = 52
     guesses_count = 0
-    current_answer = random.choice(words)
+    current_answer = ""
     guesses = [[]] * 6
     current_guess = []
     current_guess_string = ""
@@ -279,24 +272,33 @@ while True:
             pygame.quit()
             sys.exit()
         if wordle_start == False:
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                 SCREEN.fill("white")
                 SCREEN.blit(BEACH_BG, BEACH_RECT)
-                wordle_start = True
+                with open("wordLists/nature.txt", "r") as natureWordsFile:
+                    natureWords = natureWordsFile.read().splitlines()
                 current_answer = random.choice(natureWords)
+                wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
                 SCREEN.fill("white")
                 SCREEN.blit(FOOD_BG, FOOD_RECT)
+                with open("wordLists/food.txt", "r") as foodWordsFile:
+                    foodWords = foodWordsFile.read().splitlines()
                 current_answer = random.choice(foodWords)
                 wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
                 SCREEN.fill("white")
                 SCREEN.blit(CATS_BG, CATS_RECT)
+                with open("wordLists/animal.txt", "r") as animalWordsFile:
+                    animalWords = animalWordsFile.read().splitlines()
                 current_answer = random.choice(animalWords)
                 wordle_start = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 SCREEN.fill("white")
                 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                with open("wordLists/words.txt", "r") as allWordsFile:
+                    allWords = allWordsFile.read().splitlines()
                 current_answer = random.choice(allWords)
                 wordle_start = True
             pygame.display.update()
@@ -316,7 +318,11 @@ while True:
                         end_display()
                     else:
                         if len(current_guess_string) == 5:
-                            check_guess(current_guess, current_answer)
+                            with open("wordLists/words.txt",'r') as text_file:
+                                lines = text_file.read().splitlines()
+                            for line in lines:
+                                if current_guess_string == line:
+                                    check_guess(current_guess, current_answer)
                 
                 elif event.key == pygame.K_BACKSPACE:
                     if len(current_guess_string) > 0:
