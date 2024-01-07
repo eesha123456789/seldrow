@@ -15,10 +15,12 @@ import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
 
-import main_menu 
 from button import Button
+from pygame import mixer
+
 
 pygame.init() #initializes all modules to get everything started
+mixer.init() #for music
 
 
 #constants
@@ -46,6 +48,28 @@ WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2))
 WORDLE_LOSS = pygame.image.load("bg_folder/wordle_loss.png") 
 WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
+
+#sound effects
+
+
+eating = pygame.mixer.Sound("Sounds/Eating.wav")
+congrats = pygame.mixer.Sound("Sounds/Congrats.wav")
+error = pygame.mixer.Sound("Sounds/Error.wav")
+meow = pygame.mixer.Sound("Sounds/Meow.wav")
+water = pygame.mixer.Sound("Sounds/Water.wav")
+womp = pygame.mixer.Sound("Sounds/Womp.wav")
+def soundCorrect(bg):
+    if game_result == "":
+        if bg == "nature":
+            water.play()
+        if bg == "food":
+            eating.play()
+        if bg == "animals":
+            meow.play()
+   
+
+#bg music
+elevator = pygame.mixer.music.load("Sounds/Elevator.wav")
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -114,9 +138,8 @@ LETTER_SIZE = 69
 # Global variables
 
 words = []
-with open("words.txt", "r") as file:
-    words = file.read().splitlines()
-current_answer = random.choice(words)
+
+
 
 guesses_count = 0
 
@@ -245,7 +268,7 @@ def reset():
     
     letter_y_pos = 52
     guesses_count = 0
-    current_answer = random.choice(words)
+    current_answer = ""
     guesses = [[]] * 6
     current_guess = []
     current_guess_string = ""
@@ -254,6 +277,7 @@ def reset():
 def end_display():
     if game_result == "W":
         SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
+        congrats.play()
     elif game_result == "L":
         SCREEN.blit(WORDLE_LOSS, WORDLE_LOSS_RECT)
         LOSS_TEXT = LETTER_FONT.render("""Welcome to Seldrow! Pick a background.)""", True, "black", "white")
@@ -263,7 +287,7 @@ def end_display():
         answer_display_rect = answer_display.get_rect()
         answer_display_rect.center = (WIDTH // 2, HEIGHT // 2-30)
         SCREEN.blit(answer_display, answer_display_rect)
-    
+        womp.play()
     pygame.display.update()
     
 
@@ -272,28 +296,52 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+            
         if wordle_start == False:
+            pygame.mixer.music.play(-1)
+            cur_bg = ""
+            
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                cur_bg = "nature"
                 SCREEN.fill("white")
                 SCREEN.blit(BEACH_BG, BEACH_RECT)
+                with open("wordLists/nature.txt", "r") as natureWordsFile:
+                    natureWords = natureWordsFile.read().splitlines()
+                current_answer = random.choice(natureWords)
                 wordle_start = True
+                
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                cur_bg = "food"
                 SCREEN.fill("white")
                 SCREEN.blit(FOOD_BG, FOOD_RECT)
+                with open("wordLists/food.txt", "r") as foodWordsFile:
+                    foodWords = foodWordsFile.read().splitlines()
+                current_answer = random.choice(foodWords)
                 wordle_start = True
+                
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                cur_bg = "animals"
                 SCREEN.fill("white")
                 SCREEN.blit(CATS_BG, CATS_RECT)
+                with open("wordLists/animals.txt", "r") as animalWordsFile:
+                    animalWords = animalWordsFile.read().splitlines()
+                current_answer = random.choice(animalWords)
                 wordle_start = True
+                
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 SCREEN.fill("white")
                 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                with open("wordLists/words.txt", "r") as allWordsFile:
+                    allWords = allWordsFile.read().splitlines()
+                current_answer = random.choice(allWords)
                 wordle_start = True
+                
             pygame.display.update()
         # if event.type == pygame.MOUSEBUTTONDOWN:
         #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
         if wordle_start == True:
+            pygame.mixer.music.stop()
             if game_result != "":
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     reset()
@@ -306,7 +354,18 @@ while True:
                         end_display()
                     else:
                         if len(current_guess_string) == 5:
-                            check_guess(current_guess, current_answer)
+                            temp = False
+                            with open("wordLists/words.txt",'r') as text_file:
+                                lines = text_file.read().splitlines()
+                            for line in lines:
+                                if current_guess_string == line:
+                                    check_guess(current_guess, current_answer)
+                                    soundCorrect(cur_bg)
+                                    temp = True
+                            if temp == False:
+                                error.play()
+                                
+                                
                 
                 elif event.key == pygame.K_BACKSPACE:
                     if len(current_guess_string) > 0:
