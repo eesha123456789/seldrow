@@ -59,6 +59,7 @@ LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf", 50)
 DISPLAY_FONT = pygame.font.Font("FredokaOne-Regular.otf", 30)
 RESULT_FONT = pygame.font.Font("FredokaOne-Regular.otf", 60)
 wordle_start = False
+
 def initialWordle():
     BG_TEXT1 = DISPLAY_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
     BG_TEXT_RECT1 = BG_TEXT1.get_rect()
@@ -112,7 +113,6 @@ LETTER_SIZE = 69
 
 # Global variables
 
-#not sure if this is is right
 words = []
 with open("wordLists/words.txt", "r") as file:
     allWords = file.read().splitlines()
@@ -126,8 +126,7 @@ current_answer = random.choice(words)
 
 guesses_count = 0
 
-# guesses is a 2D list storing all the guesses, which are lists of letters.
-# The list will be iterated through so each letter in each guess will be drawn on the screen.
+# guesses variable stores all guesses, which are lists of letters..
 guesses = [[]] * 6
 
 current_guess = []
@@ -144,12 +143,12 @@ WORDLE_POS_MOUSE = pygame.mouse.get_pos()
 
 class WordleLetter:
     def __init__(self, text, bg_position):
+        self.text = text
         self.bg_color = "white"
         self.text_color = "black"
         self.bg_position = bg_position
         self.bg_x = bg_position[0]
         self.bg_y = bg_position[1]
-        self.text = text
         self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
         #might need more tuning to center the letters
         self.text_position = (self.bg_x + 30, self.bg_y + 30)
@@ -168,12 +167,6 @@ class WordleLetter:
         #WORDLE_MAIN_MENU.changeColor(WORDLE_POS_MOUSE)
         #WORDLE_MAIN_MENU.update(SCREEN)
         
-        pygame.display.update()
-
-    def delete(self):
-        # Fills the letter's spot with the default square, emptying it.
-        pygame.draw.rect(SCREEN, "white", self.bg_rect)
-        pygame.draw.rect(SCREEN, OUTLINE, self.bg_rect, 3) #last parameter is the width of the border
         pygame.display.update()
         
     
