@@ -54,12 +54,12 @@ WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2))
 
 
 #sound effects
-eating = pygame.mixer.Sound("Sounds/Eating.wav")
-congrats = pygame.mixer.Sound("Sounds/Congrats.wav")
-error = pygame.mixer.Sound("Sounds/Error.wav")
-meow = pygame.mixer.Sound("Sounds/Meow.wav")
-water = pygame.mixer.Sound("Sounds/Water.wav")
-womp = pygame.mixer.Sound("Sounds/Womp.wav")
+eating = pygame.mixer.Sound("sounds/Eating.wav")
+congrats = pygame.mixer.Sound("sounds/Congrats.wav")
+error = pygame.mixer.Sound("sounds/Error.wav")
+meow = pygame.mixer.Sound("sounds/Meow.wav")
+water = pygame.mixer.Sound("sounds/Water.wav")
+womp = pygame.mixer.Sound("sounds/Womp.wav")
 
 def soundCorrect(bg):
     if game_result == "":
@@ -71,7 +71,7 @@ def soundCorrect(bg):
             meow.play()
    
 #bg music
-elevator = pygame.mixer.music.load("Sounds/Elevator.wav")
+elevator = pygame.mixer.music.load("sounds/Elevator.wav")
 pygame.mixer.music.set_volume(0.4)
 
 #Variables for set up of dislay window (how it looks)
@@ -82,9 +82,10 @@ pygame.display.set_caption("Seldrow!")
 SCREEN.fill("white")
 
 # 2nd parameter is the font size
-LETTER_FONT = pygame.font.Font("FredokaOne-Regular.otf", 50)
-DISPLAY_FONT = pygame.font.Font("FredokaOne-Regular.otf", 30)
-RESULT_FONT = pygame.font.Font("FredokaOne-Regular.otf", 60)
+LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 50)
+DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 30)
+RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
+KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
 wordle_start = False
 
 def initialWordle():
@@ -184,15 +185,15 @@ class WordleLetter:
 #keyboard variables
 
 #distance from the left for the first letter
-kb_x_pos = 205
+kb_x_pos = 110
 #distance from the top of the screen fro the first row
-kb_y_pos = 52
+kb_y_pos = 400
 #between each letter in a row
-KEY_X_SPACING = 30
+KEY_X_SPACING = 10
 #between each row
-KEY_Y_SPACING = 15
-KEY_HEIGHT = 39
-KEY_WIDTH = 30
+KEY_Y_SPACING = 10
+KEY_HEIGHT = 60
+KEY_WIDTH = 50
 
 class Key:
     def __init__(self, name, key_pos):
@@ -203,16 +204,16 @@ class Key:
         self.key_x = key_pos[0]
         self.key_y = key_pos[1]
 
-        self.key_rect = (self.key_x, self.key_y, KEY_HEIGHT, KEY_WIDTH) #left, top, width, height 
+        self.key_rect = (self.key_x, self.key_y, KEY_WIDTH, KEY_HEIGHT) #left, top, width, height 
         #might need more tuning to center the letters
-        self.letter_pos = (self.key_x + 30, self.key_y + 30)
+        self.letter_pos = (self.key_x + 25, self.key_y + 30)
 
-        self.surface = LETTER_FONT.render(self.name, True, self.letter_color)
+        self.surface = KEYBOARD_FONT .render(self.name, True, self.letter_color)
         self.letter_rect = self.surface.get_rect(center = self.letter_pos)
         
     def drawKey(self):
         pygame.draw.rect(SCREEN, self.key_color, self.key_rect)
-        self.surface = LETTER_FONT.render(self.name, True, self.letter_color)
+        self.surface = KEYBOARD_FONT .render(self.name, True, self.letter_color)
         SCREEN.blit(self.surface, self.letter_rect)
 
         pygame.display.update()
@@ -237,11 +238,12 @@ class Keyboard:
 
             if letter == "p":
                 kb_y_pos += KEY_HEIGHT + KEY_Y_SPACING
-                kb_x_pos = 300
+                #x pos is good now
+                kb_x_pos = 140
 
             if letter == "l":
-                kb_y_pos += KEY_Y_SPACING
-                kb_x_pos = 350
+                kb_y_pos += KEY_HEIGHT + KEY_Y_SPACING
+                kb_x_pos = 200
 
     def updateKey(self, letter, keyColor):
         key = self.keys[letter]
