@@ -127,7 +127,6 @@ basil
 oregy
 thyme
 anise
-cumin
 coris
 chive
 fennu
