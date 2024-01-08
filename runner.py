@@ -29,9 +29,10 @@ mixer.init() #for music
 GREEN = "#77DD77"
 YELLOW = "#FFDF00"
 GREY = "#787c7e"
-OUTLINE = "#cfcfcf"
+LIGHT_GREY = "#cfcfcf"
 
 WIDTH, HEIGHT = 800, 660
+WORDLE_BG_SIZE = (300,390)
 
 # Different Screens Images and Pictures
 BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG") 
@@ -41,7 +42,10 @@ FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2+3, HEIGHT//2))
 CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
 CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 BACKGROUND = pygame.image.load("blankwordle.png")
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2+6, HEIGHT//2+8)) 
+# makes bg smaller
+BACKGROUND = pygame.transform.scale(BACKGROUND, WORDLE_BG_SIZE)
+BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-100)) 
+
 
 WORDLE_WIN = pygame.image.load("bg_folder/wordle_win.png") 
 WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2)) 
@@ -50,14 +54,13 @@ WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2))
 
 
 #sound effects
-
-
 eating = pygame.mixer.Sound("Sounds/Eating.wav")
 congrats = pygame.mixer.Sound("Sounds/Congrats.wav")
 error = pygame.mixer.Sound("Sounds/Error.wav")
 meow = pygame.mixer.Sound("Sounds/Meow.wav")
 water = pygame.mixer.Sound("Sounds/Water.wav")
 womp = pygame.mixer.Sound("Sounds/Womp.wav")
+
 def soundCorrect(bg):
     if game_result == "":
         if bg == "nature":
@@ -67,9 +70,9 @@ def soundCorrect(bg):
         if bg == "animals":
             meow.play()
    
-
 #bg music
 elevator = pygame.mixer.music.load("Sounds/Elevator.wav")
+pygame.mixer.music.set_volume(0.4)
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -136,11 +139,7 @@ LETTER_Y_SPACING = 20
 LETTER_SIZE = 69
 
 # Global variables
-
 words = []
-
-
-
 guesses_count = 0
 
 # guesses variable stores all guesses, which are lists of letters..
@@ -148,30 +147,26 @@ guesses = [[]] * 6
 
 current_guess = []
 current_guess_string = ""
-
-
 game_result = ""
 
-
 #Main Menu Button
-WORDLE_POS_MOUSE = pygame.mouse.get_pos()
+#WORDLE_POS_MOUSE = pygame.mouse.get_pos()
 #WORDLE_MAIN_MENU=button.Button()
 
-
 class WordleLetter:
-    def __init__(self, text, bg_position):
+    def __init__(self, text, bg_pos):
         self.text = text
         self.bg_color = "white"
         self.text_color = "black"
-        self.bg_position = bg_position
-        self.bg_x = bg_position[0]
-        self.bg_y = bg_position[1]
+        self.bg_pos = bg_pos
+        self.bg_x = bg_pos[0]
+        self.bg_y = bg_pos[1]
         self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
         #might need more tuning to center the letters
-        self.text_position = (self.bg_x + 30, self.bg_y + 30)
+        self.text_pos = (self.bg_x + 30, self.bg_y + 30)
 
         self.surface = LETTER_FONT.render(self.text, True, self.text_color)
-        self.text_rect = self.surface.get_rect(center = self.text_position)
+        self.text_rect = self.surface.get_rect(center = self.text_pos)
 
     def draw(self):
         # Puts the letter on the screen at the desired positions.
@@ -185,8 +180,77 @@ class WordleLetter:
         #WORDLE_MAIN_MENU.update(SCREEN)
         
         pygame.display.update()
+
+#keyboard variables
+
+#distance from the left for the first letter
+kb_x_pos = 205
+#distance from the top of the screen fro the first row
+kb_y_pos = 52
+#between each letter in a row
+KEY_X_SPACING = 30
+#between each row
+KEY_Y_SPACING = 15
+KEY_HEIGHT = 39
+KEY_WIDTH = 30
+
+class Key:
+    def __init__(self, name, key_pos):
+        self.name = name
+        self.key_color = LIGHT_GREY
+        self.letter_color = "black"
+        self.key_pos = key_pos
+        self.key_x = key_pos[0]
+        self.key_y = key_pos[1]
+
+        self.key_rect = (self.key_x, self.key_y, KEY_HEIGHT, KEY_WIDTH) #left, top, width, height 
+        #might need more tuning to center the letters
+        self.letter_pos = (self.key_x + 30, self.key_y + 30)
+
+        self.surface = LETTER_FONT.render(self.name, True, self.letter_color)
+        self.letter_rect = self.surface.get_rect(center = self.letter_pos)
         
+    def drawKey(self):
+        pygame.draw.rect(SCREEN, self.key_color, self.key_rect)
+        self.surface = LETTER_FONT.render(self.name, True, self.letter_color)
+        SCREEN.blit(self.surface, self.letter_rect)
+
+        pygame.display.update()
+
+    def update(self, bgColor):
+        self.key_color = bgColor
+        self.drawKey()
+
+
+class Keyboard:
+    def __init__(self):
+        self.keys = {}
+
+    def drawKeyboard(self):
+        global kb_x_pos, kb_y_pos
+        alphabet = "qwertyuiopasdfghjklzxcvbnm"
+        for letter in alphabet:
+            key = Key(letter, (kb_x_pos,kb_y_pos))
+            self.keys[letter] = key
+            key.drawKey()
+            kb_x_pos += KEY_WIDTH + KEY_X_SPACING
+
+            if letter == "p":
+                kb_y_pos += KEY_HEIGHT + KEY_Y_SPACING
+                kb_x_pos = 300
+
+            if letter == "l":
+                kb_y_pos += KEY_Y_SPACING
+                kb_x_pos = 350
+
+    def updateKey(self, letter, keyColor):
+        key = self.keys[letter]
+        key.update(keyColor)
     
+
+keyboard = Keyboard()
+
+
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
     global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos, letter_y_pos
@@ -201,15 +265,24 @@ def check_guess(guess, answer):
             guess[i].bg_color = GREEN
             guess[i].text_color = "white"
             used_letters += cur_letter
+            #keyboard
+            keyboard.updateKey(cur_letter, GREEN)
+            
         elif cur_letter in answer and cur_letter not in used_letters:
             guess[i].bg_color = YELLOW
             guess[i].text_color = "white"
             all_correct = False
+            #keyboard
+            keyboard.updateKey(cur_letter, YELLOW)
+
         else: #letter not in answer
             guess[i].bg_color = GREY
             guess[i].text_color = "white"
             all_correct = False
+            #keyboard
+            keyboard.updateKey(cur_letter, GREY)
 
+        
         guess[i].draw()
         pygame.display.update()
 
@@ -305,6 +378,7 @@ while True:
                 cur_bg = "nature"
                 SCREEN.fill("white")
                 SCREEN.blit(BEACH_BG, BEACH_RECT)
+                keyboard.drawKeyboard()
                 with open("wordLists/nature.txt", "r") as natureWordsFile:
                     natureWords = natureWordsFile.read().splitlines()
                 current_answer = random.choice(natureWords)
@@ -314,6 +388,7 @@ while True:
                 cur_bg = "food"
                 SCREEN.fill("white")
                 SCREEN.blit(FOOD_BG, FOOD_RECT)
+                keyboard.drawKeyboard()
                 with open("wordLists/food.txt", "r") as foodWordsFile:
                     foodWords = foodWordsFile.read().splitlines()
                 current_answer = random.choice(foodWords)
@@ -323,6 +398,7 @@ while True:
                 cur_bg = "animals"
                 SCREEN.fill("white")
                 SCREEN.blit(CATS_BG, CATS_RECT)
+                keyboard.drawKeyboard()
                 with open("wordLists/animals.txt", "r") as animalWordsFile:
                     animalWords = animalWordsFile.read().splitlines()
                 current_answer = random.choice(animalWords)
@@ -331,6 +407,7 @@ while True:
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                 SCREEN.fill("white")
                 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                keyboard.drawKeyboard()
                 with open("wordLists/words.txt", "r") as allWordsFile:
                     allWords = allWordsFile.read().splitlines()
                 current_answer = random.choice(allWords)
