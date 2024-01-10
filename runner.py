@@ -11,12 +11,15 @@ class Main:
     answer = random.choice(words)
 """
 from array import *
+import tkinter
 import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
 
 from button import Button
 from pygame import mixer
+from tkinter import *
+from tkinter import ttk
 
 
 pygame.init() #initializes all modules to get everything started
@@ -110,21 +113,6 @@ def initialWordle():
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
 initialWordle()
-
-#If we need buttons
-"""button_surface = pygame.image.load("bg_folder/button.jpg")
-button_surface = pygame.transform.scale(button_surface, (250, 100))
-beach_button=Button()
-beach_button._init_(button_surface, 150, 100, "Beach Background")
-SCREEN.blit(button_surface, beach_button)
-
-food_button=Button()
-food_button._init_(button_surface, 150, 300, "Food Background")
-SCREEN.blit(button_surface, food_button)
-
-words_button=Button()
-words_button._init_(button_surface, 150, 500, "Words Background")
-SCREEN.blit(button_surface, words_button)"""
 
 
 pygame.display.update() #whole window is updated
@@ -248,8 +236,6 @@ class Keyboard:
     def updateKey(self, letter, keyColor):
         key = self.keys[letter]
         key.update(keyColor)
-    
-
 keyboard = Keyboard()
 
 
@@ -443,8 +429,12 @@ while True:
                                     temp = True
                             if temp == False:
                                 error.play()
-                                
-                                
+                                errorPopup = tkinter.Tk()
+                                placement = ttk.Frame(errorPopup, padding=100)
+                                placement.grid()
+                                ttk.Label(placement,  text="Please enter a valid word.").grid(column=0, row=0)
+                                ttk.Button(placement, text="Ok", command=errorPopup.destroy).grid(column=0, row=2)
+                                errorPopup.mainloop()           
                 
                 elif event.key == pygame.K_BACKSPACE:
                     if len(current_guess_string) > 0:
