@@ -319,7 +319,7 @@ def delete_letter():
 
 def reset():
     #resets variables after each game
-    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos
+    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos
     
     SCREEN.fill("white")
     initialWordle()
@@ -334,6 +334,10 @@ def reset():
     current_guess = []
     current_guess_string = ""
     game_result = ""
+
+    #keyboard variables
+    kb_x_pos = 110
+    kb_y_pos = 400
     
 def end_display():
     if game_result == "W":

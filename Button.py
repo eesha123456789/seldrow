@@ -1,3 +1,4 @@
+""""
 import pygame, sys
 pygame.init()
 
@@ -10,7 +11,7 @@ class Button():
         self.x = pos_x
         self.y = pos_y
         self.text_input = text_input
-        self.text = LETTER_FONT.render(self.text_finput, True, "White")
+        self.text = LETTER_FONT.render(self.text_input, True, "White")
         self.text_rect = self.text.get_rect(center = (self.x,self.y))
         self.base_color="black"
         self.hovering_color="green"
@@ -30,5 +31,5 @@ class Button():
             self.text = LETTER_FONT.render(self.text_input, True, "green")
             #self.text = LETTER_FONT.render(self.text_input, True, "white")
     
-    
+    """
 
