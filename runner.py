@@ -37,19 +37,21 @@ WIDTH, HEIGHT = 800, 660
 WORDLE_BG_SIZE = (300,390)
 
 # Different Screens Images and Pictures
-BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG") 
-BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2+6, HEIGHT//2+8)) 
-FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
-FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2+3, HEIGHT//2)) 
+NATURE_BG = pygame.image.load("bg_folder/nature_bg.png") 
+NATURE_BG = pygame.transform.scale(NATURE_BG, (600,400))
+NATURE_RECT = NATURE_BG.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
+
+FOOD_BG = pygame.image.load("bg_folder/food_bg.png") 
+FOOD_BG = pygame.transform.scale(FOOD_BG, (600,400))
+FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
+
 CATS_BG = pygame.image.load("bg_folder/cats_bg.png") 
 CATS_BG = pygame.transform.scale(CATS_BG, (600,400))
 CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
 
 BACKGROUND = pygame.image.load("bg_folder/blankwordle.png")
-
-# makes bg smaller
 BACKGROUND = pygame.transform.scale(BACKGROUND, WORDLE_BG_SIZE)
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-100)) 
+BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
 
 
 WORDLE_WIN = pygame.image.load("bg_folder/wordle_win.png") 
@@ -147,6 +149,9 @@ LETTER_SIZE = 50
 words = []
 guesses_count = 0
 
+#helps with preventing yellow square when the letter has alr been guessed correctly
+used_letters = ""
+
 # guesses variable stores all guesses, which are lists of letters..
 guesses = [[]] * 6
 
@@ -226,6 +231,8 @@ class Key:
         self.key_color = bgColor
         self.drawKey()
 
+    def getColor(self):
+        return self.key_color
 
 class Keyboard:
     def __init__(self):
@@ -252,40 +259,65 @@ class Keyboard:
     def updateKey(self, letter, keyColor):
         key = self.keys[letter]
         key.update(keyColor)
+
+    def getKey(self, letter):
+        return self.keys[letter]
+
 keyboard = Keyboard()
 
 
 def check_guess(guess, answer):
     # note: must use global keyword to change global variables in function
-    global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos, letter_y_pos
+    global current_guess, guesses_count, current_guess_string, game_result, letter_x_pos, letter_y_pos, used_letters
 
     all_correct = True
-    used_letters = ""
     
+    #helps with preventing yellow square when the letter has alr been guessed correctly
+    used_letters = guess[0].text.lower() + guess[1].text.lower() + guess[2].text.lower() + guess[3].text.lower() + guess[4].text.lower()
     #iterate through each letter in the guess
     for i in range(5):
         cur_letter = guess[i].text.lower()
+        #number of the same letter in a word
+        num_letters = 0
+
+        for letter in used_letters:
+            if letter == cur_letter:
+                num_letters += 1
+
         if cur_letter == answer[i]:
             guess[i].bg_color = GREEN
             guess[i].text_color = "white"
-            used_letters += cur_letter
             #keyboard
             keyboard.updateKey(cur_letter, GREEN)
-            
-        elif cur_letter in answer and cur_letter not in used_letters:
-            guess[i].bg_color = YELLOW
-            guess[i].text_color = "white"
-            all_correct = False
-            #keyboard
-            keyboard.updateKey(cur_letter, YELLOW)
-
+        
+        # what should we do if there's two same letters in a word
+        elif cur_letter in answer:
+            used_num = 0
+            for letter in used_letters:
+                if letter == cur_letter:
+                    used_num += 1
+            if used_num <= num_letters:
+                guess[i].bg_color = YELLOW
+                guess[i].text_color = "white"
+                all_correct = False
+                #keyboard
+                if keyboard.getKey(cur_letter).getColor() != GREEN:
+                    keyboard.updateKey(cur_letter, YELLOW)
+            else:
+                guess[i].bg_color = GREY
+                guess[i].text_color = "white"
+                all_correct = False
+                #keyboard
+                if keyboard.getKey(cur_letter).getColor() != GREEN:
+                    keyboard.updateKey(cur_letter, GREY)
+                
         else: #letter not in answer
             guess[i].bg_color = GREY
             guess[i].text_color = "white"
             all_correct = False
             #keyboard
-            keyboard.updateKey(cur_letter, GREY)
-
+            if keyboard.getKey(cur_letter).getColor() != GREEN:
+                    keyboard.updateKey(cur_letter, GREY)
         
         guess[i].draw()
         pygame.display.update()
@@ -335,7 +367,7 @@ def delete_letter():
 
 def reset():
     #resets variables after each game
-    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos, play_BG_Sounds
+    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos, play_BG_Sounds, used_letters
     
     SCREEN.fill("white")
     initialWordle()
@@ -350,7 +382,8 @@ def reset():
     current_guess = []
     current_guess_string = ""
     game_result = ""
-    play_BG_Sounds=True
+    play_BG_Sounds = True
+    used_letters = ""
 
     #keyboard variables
     kb_x_pos = 110
@@ -390,7 +423,7 @@ while True:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                 cur_bg = "nature"
                 SCREEN.fill("white")
-                SCREEN.blit(BEACH_BG, BEACH_RECT)
+                SCREEN.blit(NATURE_BG, NATURE_RECT)
                 keyboard.drawKeyboard()
                 with open("wordLists/nature.txt", "r") as natureWordsFile:
                     natureWords = natureWordsFile.read().splitlines()
