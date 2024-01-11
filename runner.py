@@ -109,7 +109,7 @@ def initialWordle():
     BG_TEXT_RECT1 = BG_TEXT1.get_rect()
     BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-100)
     SCREEN.blit(BG_TEXT1,BG_TEXT_RECT1)
-    BG_TEXT2 = DISPLAY_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
+    BG_TEXT2 = DISPLAY_FONT.render("""Press 1 to enter jumanji""", True, "black", "white")
     BG_TEXT_RECT2 = BG_TEXT2.get_rect()
     BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-50)
     SCREEN.blit(BG_TEXT2,BG_TEXT_RECT2)
