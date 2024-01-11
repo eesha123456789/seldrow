@@ -11,12 +11,14 @@ class Main:
     answer = random.choice(words)
 """
 from array import *
+import tkinter
 import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
 
-from button import Button
 from pygame import mixer
+from tkinter import *
+from tkinter import ttk
 
 
 pygame.init() #initializes all modules to get everything started
@@ -60,6 +62,8 @@ error = pygame.mixer.Sound("sounds/Error.wav")
 meow = pygame.mixer.Sound("sounds/Meow.wav")
 water = pygame.mixer.Sound("sounds/Water.wav")
 womp = pygame.mixer.Sound("sounds/Womp.wav")
+elevator = pygame.mixer.Sound("sounds/Elevator.wav")
+play_BG_Sounds=True
 
 def soundCorrect(bg):
     if game_result == "":
@@ -70,9 +74,17 @@ def soundCorrect(bg):
         if bg == "animals":
             meow.play()
    
-#bg music
-elevator = pygame.mixer.music.load("sounds/Elevator.wav")
-pygame.mixer.music.set_volume(0.4)
+def backgroundSounds(bg):
+    if bg == "nature":
+        natureBG_Sound= pygame.mixer.Sound("Sounds/PapaPizzaria.wav")
+        natureBG_Sound.play(-1)
+    elif bg == "food":
+        foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
+        foodBG_Sound.play()
+    elif bg == "animals":
+        animalsBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
+        animalsBG_Sound.play(-1)
+
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -110,21 +122,6 @@ def initialWordle():
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
 initialWordle()
-
-#If we need buttons
-"""button_surface = pygame.image.load("bg_folder/button.jpg")
-button_surface = pygame.transform.scale(button_surface, (250, 100))
-beach_button=Button()
-beach_button._init_(button_surface, 150, 100, "Beach Background")
-SCREEN.blit(button_surface, beach_button)
-
-food_button=Button()
-food_button._init_(button_surface, 150, 300, "Food Background")
-SCREEN.blit(button_surface, food_button)
-
-words_button=Button()
-words_button._init_(button_surface, 150, 500, "Words Background")
-SCREEN.blit(button_surface, words_button)"""
 
 
 pygame.display.update() #whole window is updated
@@ -248,8 +245,6 @@ class Keyboard:
     def updateKey(self, letter, keyColor):
         key = self.keys[letter]
         key.update(keyColor)
-    
-
 keyboard = Keyboard()
 
 
@@ -348,6 +343,7 @@ def reset():
     current_guess = []
     current_guess_string = ""
     game_result = ""
+    play_BG_Sounds=True
 
     #keyboard variables
     kb_x_pos = 110
@@ -377,8 +373,8 @@ while True:
             sys.exit()
             
         if wordle_start == False:
-            pygame.mixer.music.play(-1)
             cur_bg = ""
+            elevator.play(-1)
             
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                 cur_bg = "nature"
@@ -424,7 +420,10 @@ while True:
         #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
         if wordle_start == True:
-            pygame.mixer.music.stop()
+            elevator.stop()
+            if(play_BG_Sounds==True):
+                backgroundSounds(cur_bg)
+                play_BG_Sounds=False
             if game_result != "":
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     reset()
@@ -447,8 +446,12 @@ while True:
                                     temp = True
                             if temp == False:
                                 error.play()
-                                
-                                
+                                errorPopup = tkinter.Tk()
+                                placement = ttk.Frame(errorPopup, padding=75)
+                                placement.grid()
+                                ttk.Label(placement, background= "yellow", font="Times", text="Please enter a valid word.").grid(column=0, row=0)
+                                ttk.Button(placement, text="Ok", padding=10, command=errorPopup.destroy).grid(column=0, row=2)
+                                errorPopup.mainloop()           
                 
                 elif event.key == pygame.K_BACKSPACE:
                     if len(current_guess_string) > 0:
