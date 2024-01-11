@@ -76,11 +76,12 @@ def soundCorrect(bg):
    
 def backgroundSounds(bg):
     if bg == "nature":
-        natureBG_Sound= pygame.mixer.Sound("Sounds/PapaPizzaria.wav")
+        natureBG_Sound= pygame.mixer.Sound("Sounds/LionKing.wav")
+        natureBG_Sound.set_volume(2)
         natureBG_Sound.play(-1)
     elif bg == "food":
         foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
-        foodBG_Sound.play()
+        foodBG_Sound.play(-1)
     elif bg == "animals":
         animalsBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
         animalsBG_Sound.play(-1)
@@ -374,6 +375,7 @@ while True:
             
         if wordle_start == False:
             cur_bg = ""
+            elevator.set_volume(0.4)
             elevator.play(-1)
             
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
