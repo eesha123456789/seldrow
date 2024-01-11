@@ -41,9 +41,12 @@ BEACH_BG = pygame.image.load("bg_folder/beach_bg.JPG")
 BEACH_RECT = BEACH_BG.get_rect(center=(WIDTH//2+6, HEIGHT//2+8)) 
 FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG") 
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2+3, HEIGHT//2)) 
-CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
-CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-BACKGROUND = pygame.image.load("blankwordle.png")
+CATS_BG = pygame.image.load("bg_folder/cats_bg.png") 
+CATS_BG = pygame.transform.scale(CATS_BG, (600,400))
+CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
+
+BACKGROUND = pygame.image.load("bg_folder/blankwordle.png")
+
 # makes bg smaller
 BACKGROUND = pygame.transform.scale(BACKGROUND, WORDLE_BG_SIZE)
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-100)) 
@@ -63,6 +66,11 @@ meow = pygame.mixer.Sound("sounds/Meow.wav")
 water = pygame.mixer.Sound("sounds/Water.wav")
 womp = pygame.mixer.Sound("sounds/Womp.wav")
 elevator = pygame.mixer.Sound("sounds/Elevator.wav")
+
+#bg SOunds
+natureBG_Sound= pygame.mixer.Sound("Sounds/LionKing.wav")
+foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")        
+animalsBG_Sound= pygame.mixer.Sound("sounds/Nyan_Cat.wav")
 play_BG_Sounds=True
 
 def soundCorrect(bg):
@@ -76,13 +84,12 @@ def soundCorrect(bg):
    
 def backgroundSounds(bg):
     if bg == "nature":
-        natureBG_Sound= pygame.mixer.Sound("Sounds/PapaPizzaria.wav")
+        natureBG_Sound.set_volume(2)
         natureBG_Sound.play(-1)
     elif bg == "food":
-        foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
-        foodBG_Sound.play()
+        foodBG_Sound.play(-1)
     elif bg == "animals":
-        animalsBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
+        animalsBG_Sound.set_volume(2)
         animalsBG_Sound.play(-1)
 
 
@@ -94,7 +101,7 @@ pygame.display.set_caption("Seldrow!")
 SCREEN.fill("white")
 
 # 2nd parameter is the font size
-LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 50)
+LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 40)
 DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 30)
 RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
@@ -105,7 +112,7 @@ def initialWordle():
     BG_TEXT_RECT1 = BG_TEXT1.get_rect()
     BG_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-100)
     SCREEN.blit(BG_TEXT1,BG_TEXT_RECT1)
-    BG_TEXT2 = DISPLAY_FONT.render("""Press 1 for a beachy vibe""", True, "black", "white")
+    BG_TEXT2 = DISPLAY_FONT.render("""Press 1 to enter jumanji""", True, "black", "white")
     BG_TEXT_RECT2 = BG_TEXT2.get_rect()
     BG_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-50)
     SCREEN.blit(BG_TEXT2,BG_TEXT_RECT2)
@@ -127,14 +134,14 @@ initialWordle()
 pygame.display.update() #whole window is updated
 
 #distance from the left for the first letter
-letter_x_pos = 205
+letter_x_pos = 257
 #distance from the top of the screen fro the first row
-letter_y_pos = 52
+letter_y_pos = 13
 #between each letter in a row
-LETTER_X_SPACING = 83
+LETTER_X_SPACING = 9
 #between each row
-LETTER_Y_SPACING = 20
-LETTER_SIZE = 69
+LETTER_Y_SPACING = -11
+LETTER_SIZE = 50
 
 # Global variables
 words = []
@@ -161,7 +168,7 @@ class WordleLetter:
         self.bg_y = bg_pos[1]
         self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE) #left, top, width, height 
         #might need more tuning to center the letters
-        self.text_pos = (self.bg_x + 30, self.bg_y + 30)
+        self.text_pos = (self.bg_x + 25, self.bg_y + 25)
 
         self.surface = LETTER_FONT.render(self.text, True, self.text_color)
         self.text_rect = self.surface.get_rect(center = self.text_pos)
@@ -184,7 +191,7 @@ class WordleLetter:
 #distance from the left for the first letter
 kb_x_pos = 110
 #distance from the top of the screen fro the first row
-kb_y_pos = 400
+kb_y_pos = 430
 #between each letter in a row
 KEY_X_SPACING = 10
 #between each row
@@ -291,8 +298,8 @@ def check_guess(guess, answer):
         end_display()
 
     guesses_count += 1
-    letter_x_pos = 205
-    letter_y_pos += LETTER_Y_SPACING
+    letter_x_pos = 257
+    letter_y_pos += (LETTER_Y_SPACING)
     current_guess = []
     current_guess_string = ""
         
@@ -301,7 +308,7 @@ def add_new_letter():
     #adds new letter to the guess
     global letter_x_pos, current_guess_string, current_guess, guesses, letter_y_pos
     new_letter = WordleLetter(key_pressed, (letter_x_pos, guesses_count * 80 + letter_y_pos))
-    letter_x_pos += LETTER_X_SPACING
+    letter_x_pos += (LETTER_X_SPACING + LETTER_SIZE)
     current_guess_string += key_pressed
     current_guess.append(new_letter)
     guesses[guesses_count - 1].append(new_letter)
@@ -317,7 +324,7 @@ def delete_letter():
     current_guess_string = current_guess_string[:-1]
     #need to double check this
     del(guesses[guesses_count - 1][len(current_guess) - 1])
-    letter_x_pos -= LETTER_X_SPACING 
+    letter_x_pos -= (LETTER_X_SPACING + LETTER_SIZE)
     #just added
     current_guess[len(current_guess) - 1].bg_color = "white"
     current_guess[len(current_guess) - 1].text_color = "white"
@@ -328,7 +335,7 @@ def delete_letter():
 
 def reset():
     #resets variables after each game
-    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos
+    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos, play_BG_Sounds
     
     SCREEN.fill("white")
     initialWordle()
@@ -336,7 +343,7 @@ def reset():
         wordle_start = False
     pygame.display.update()
     
-    letter_y_pos = 52
+    letter_y_pos = 13
     guesses_count = 0
     current_answer = ""
     guesses = [[]] * 6
@@ -347,9 +354,12 @@ def reset():
 
     #keyboard variables
     kb_x_pos = 110
-    kb_y_pos = 400
+    kb_y_pos = 430
     
 def end_display():
+    foodBG_Sound.stop()
+    natureBG_Sound.stop()
+    animalsBG_Sound.stop()
     if game_result == "W":
         SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
         congrats.play()
@@ -374,6 +384,7 @@ while True:
             
         if wordle_start == False:
             cur_bg = ""
+            elevator.set_volume(0.4)
             elevator.play(-1)
             
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
