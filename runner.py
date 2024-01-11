@@ -16,7 +16,6 @@ import pygame #user interface
 import sys #allows us to exit
 import random #for random answer in words
 
-from button import Button
 from pygame import mixer
 from tkinter import *
 from tkinter import ttk
@@ -63,6 +62,8 @@ error = pygame.mixer.Sound("sounds/Error.wav")
 meow = pygame.mixer.Sound("sounds/Meow.wav")
 water = pygame.mixer.Sound("sounds/Water.wav")
 womp = pygame.mixer.Sound("sounds/Womp.wav")
+elevator = pygame.mixer.Sound("sounds/Elevator.wav")
+play_BG_Sounds=True
 
 def soundCorrect(bg):
     if game_result == "":
@@ -73,9 +74,17 @@ def soundCorrect(bg):
         if bg == "animals":
             meow.play()
    
-#bg music
-elevator = pygame.mixer.music.load("sounds/Elevator.wav")
-pygame.mixer.music.set_volume(0.4)
+def backgroundSounds(bg):
+    if bg == "nature":
+        natureBG_Sound= pygame.mixer.Sound("Sounds/PapaPizzaria.wav")
+        natureBG_Sound.play(-1)
+    elif bg == "food":
+        foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
+        foodBG_Sound.play()
+    elif bg == "animals":
+        animalsBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
+        animalsBG_Sound.play(-1)
+
 
 #Variables for set up of dislay window (how it looks)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -334,6 +343,7 @@ def reset():
     current_guess = []
     current_guess_string = ""
     game_result = ""
+    play_BG_Sounds=True
 
     #keyboard variables
     kb_x_pos = 110
@@ -363,8 +373,8 @@ while True:
             sys.exit()
             
         if wordle_start == False:
-            pygame.mixer.music.play(-1)
             cur_bg = ""
+            elevator.play(-1)
             
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                 cur_bg = "nature"
@@ -410,7 +420,10 @@ while True:
         #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
             #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
         if wordle_start == True:
-            pygame.mixer.music.stop()
+            elevator.stop()
+            if(play_BG_Sounds==True):
+                backgroundSounds(cur_bg)
+                play_BG_Sounds=False
             if game_result != "":
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     reset()
@@ -434,10 +447,10 @@ while True:
                             if temp == False:
                                 error.play()
                                 errorPopup = tkinter.Tk()
-                                placement = ttk.Frame(errorPopup, padding=100)
+                                placement = ttk.Frame(errorPopup, padding=75)
                                 placement.grid()
-                                ttk.Label(placement,  text="Please enter a valid word.").grid(column=0, row=0)
-                                ttk.Button(placement, text="Ok", command=errorPopup.destroy).grid(column=0, row=2)
+                                ttk.Label(placement, background= "yellow", font="Times", text="Please enter a valid word.").grid(column=0, row=0)
+                                ttk.Button(placement, text="Ok", padding=10, command=errorPopup.destroy).grid(column=0, row=2)
                                 errorPopup.mainloop()           
                 
                 elif event.key == pygame.K_BACKSPACE:
