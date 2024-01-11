@@ -43,7 +43,7 @@ FOOD_BG = pygame.image.load("bg_folder/food_bg.JPG")
 FOOD_RECT = FOOD_BG.get_rect(center=(WIDTH//2+3, HEIGHT//2)) 
 CATS_BG = pygame.image.load("bg_folder/cats_bg.JPG") 
 CATS_RECT = CATS_BG.get_rect(center=(WIDTH//2, HEIGHT//2)) 
-BACKGROUND = pygame.image.load("blankwordle.png")
+BACKGROUND = pygame.image.load("bg_folder/blankwordle.png")
 # makes bg smaller
 BACKGROUND = pygame.transform.scale(BACKGROUND, WORDLE_BG_SIZE)
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-100)) 
@@ -63,6 +63,11 @@ meow = pygame.mixer.Sound("sounds/Meow.wav")
 water = pygame.mixer.Sound("sounds/Water.wav")
 womp = pygame.mixer.Sound("sounds/Womp.wav")
 elevator = pygame.mixer.Sound("sounds/Elevator.wav")
+
+#bg SOunds
+natureBG_Sound= pygame.mixer.Sound("Sounds/LionKing.wav")
+foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")        
+animalsBG_Sound= pygame.mixer.Sound("sounds/Nyan_Cat.wav")
 play_BG_Sounds=True
 
 def soundCorrect(bg):
@@ -76,14 +81,12 @@ def soundCorrect(bg):
    
 def backgroundSounds(bg):
     if bg == "nature":
-        natureBG_Sound= pygame.mixer.Sound("Sounds/LionKing.wav")
         natureBG_Sound.set_volume(2)
         natureBG_Sound.play(-1)
     elif bg == "food":
-        foodBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
         foodBG_Sound.play(-1)
     elif bg == "animals":
-        animalsBG_Sound= pygame.mixer.Sound("sounds/PapaPizzaria.wav")
+        animalsBG_Sound.set_volume(2)
         animalsBG_Sound.play(-1)
 
 
@@ -329,7 +332,7 @@ def delete_letter():
 
 def reset():
     #resets variables after each game
-    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos
+    global guesses_count, current_answer, guesses, current_guess, current_guess_string, game_result, wordle_start, letter_y_pos, kb_x_pos, kb_y_pos, play_BG_Sounds
     
     SCREEN.fill("white")
     initialWordle()
@@ -351,6 +354,9 @@ def reset():
     kb_y_pos = 400
     
 def end_display():
+    foodBG_Sound.stop()
+    natureBG_Sound.stop()
+    animalsBG_Sound.stop()
     if game_result == "W":
         SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
         congrats.play()
