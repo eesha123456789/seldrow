@@ -30,7 +30,7 @@ from firebase_admin import db,credentials
 
 #autheticate to firebase
 cred = credentials.Certificate("credentials.json")
-firebase_admin.initialize_app(cred,{"databaseURL":"https://seldrow-e5c8b-default-rtdb.firebaseio.com/"})
+firebase_admin.initialize_app(cred,{"databaseURL":"https://seldrow-326de-default-rtdb.firebaseio.com/"})
 
 ref = db.reference("/")
 ref.get()
