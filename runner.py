@@ -24,6 +24,16 @@ from tkinter import ttk
 pygame.init() #initializes all modules to get everything started
 mixer.init() #for music
 
+#firebase database
+import firebase_admin
+from firebase_admin import db,credentials
+
+#autheticate to firebase
+cred = credentials.Certificate("credentials.json")
+firebase_admin.initialize_app(cred,{"databaseURL":"https://seldrow-e5c8b-default-rtdb.firebaseio.com/"})
+
+ref = db.reference("/")
+ref.get()
 
 #constants
 
@@ -35,6 +45,10 @@ LIGHT_GREY = "#cfcfcf"
 
 WIDTH, HEIGHT = 800, 660
 WORDLE_BG_SIZE = (300,390)
+#Variables for set up of dislay window (how it looks)
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Seldrow!")
+
 
 # Different Screens Images and Pictures
 NATURE_BG = pygame.image.load("bg_folder/nature_bg.png") 
@@ -95,12 +109,6 @@ def backgroundSounds(bg):
         animalsBG_Sound.play(-1)
 
 
-#Variables for set up of dislay window (how it looks)
-SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-
-pygame.display.set_caption("Seldrow!")
-
-SCREEN.fill("white")
 
 # 2nd parameter is the font size
 LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 40)
@@ -130,10 +138,8 @@ def initialWordle():
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
-initialWordle()
 
 
-pygame.display.update() #whole window is updated
 
 #distance from the left for the first letter
 letter_x_pos = 257
@@ -348,7 +354,6 @@ def add_new_letter():
     for i in guesses:
         for j in i:
             j.draw()
-    
 
 def delete_letter():
     #deletes letter from guess
@@ -407,105 +412,191 @@ def end_display():
         SCREEN.blit(answer_display, answer_display_rect)
         womp.play()
     pygame.display.update()
+
+def login():
+    global state
+    username = ""
+    new_name = ""
+    color_active = pygame.Color('lightskyblue3')
+    color_passive = pygame.Color("gray15")
+    color1 = color_passive
+    color2 = color_passive
+    active1 = False
+    active2 = False
     
-
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-            
-        if wordle_start == False:
-            cur_bg = ""
-            elevator.set_volume(0.4)
-            elevator.play(-1)
-            
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-                cur_bg = "nature"
-                SCREEN.fill("white")
-                SCREEN.blit(NATURE_BG, NATURE_RECT)
-                keyboard.drawKeyboard()
-                with open("wordLists/nature.txt", "r") as natureWordsFile:
-                    natureWords = natureWordsFile.read().splitlines()
-                current_answer = random.choice(natureWords)
-                wordle_start = True
+    while state=="login":
+        NAME_RECT = pygame.Rect((WIDTH/2)-100,200,200,40)
+        NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,400,200,40)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
                 
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                cur_bg = "food"
-                SCREEN.fill("white")
-                SCREEN.blit(FOOD_BG, FOOD_RECT)
-                keyboard.drawKeyboard()
-                with open("wordLists/food.txt", "r") as foodWordsFile:
-                    foodWords = foodWordsFile.read().splitlines()
-                current_answer = random.choice(foodWords)
-                wordle_start = True
-                
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-                cur_bg = "animals"
-                SCREEN.fill("white")
-                SCREEN.blit(CATS_BG, CATS_RECT)
-                keyboard.drawKeyboard()
-                with open("wordLists/animals.txt", "r") as animalWordsFile:
-                    animalWords = animalWordsFile.read().splitlines()
-                current_answer = random.choice(animalWords)
-                wordle_start = True
-                
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
-                SCREEN.fill("white")
-                SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-                keyboard.drawKeyboard()
-                with open("wordLists/words.txt", "r") as allWordsFile:
-                    allWords = allWordsFile.read().splitlines()
-                current_answer = random.choice(allWords)
-                wordle_start = True
-                
-            pygame.display.update()
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
-            #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
-        if wordle_start == True:
-            elevator.stop()
-            if(play_BG_Sounds==True):
-                backgroundSounds(cur_bg)
-                play_BG_Sounds=False
-            if game_result != "":
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    reset()
-            if event.type == pygame.KEYDOWN:
-                print(event.key)
-                print(current_answer)
-                if event.key == pygame.K_RETURN:
-                    #if game is finished
-                    if game_result != "":
-                        end_display()
-                    else:
-                        if len(current_guess_string) == 5:
-                            temp = False
-                            with open("wordLists/words.txt",'r') as text_file:
-                                lines = text_file.read().splitlines()
-                            for line in lines:
-                                if current_guess_string == line:
-                                    check_guess(current_guess, current_answer)
-                                    soundCorrect(cur_bg)
-                                    temp = True
-                            if temp == False:
-                                error.play()
-                                errorPopup = tkinter.Tk()
-                                placement = ttk.Frame(errorPopup, padding=75)
-                                placement.grid()
-                                ttk.Label(placement, background= "yellow", font="Times", text="Please enter a valid word.").grid(column=0, row=0)
-                                ttk.Button(placement, text="Ok", padding=10, command=errorPopup.destroy).grid(column=0, row=2)
-                                errorPopup.mainloop()           
-                
-                elif event.key == pygame.K_BACKSPACE:
-                    if len(current_guess_string) > 0:
-                        delete_letter()
+            if  event.type == pygame.MOUSEBUTTONDOWN:
+                if NAME_RECT.collidepoint(event.pos):
+                    active1 = True
+                    active2 = False
+                    new_name=""
+                elif NEW_NAME_RECT.collidepoint(event.pos):
+                    active2 = True
+                    active1 = False
+                    username=""
                 else:
-                    key_pressed = event.unicode.lower()
-                    if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
-                        if len(current_guess_string) < 5:
-                            add_new_letter()
+                    active1 = False
+                    active2 = False
+            if(event.type == pygame.KEYDOWN):
+                if active1:
+                    if event.key == pygame.K_BACKSPACE:
+                        username = username[:-1]
+                    else:
+                        username += event.unicode
+                elif active2:
+                    if(event.type == pygame.KEYDOWN):
+                        if event.key == pygame.K_BACKSPACE:
+                            new_name = new_name[:-1]
+                        else:
+                            new_name += event.unicode
+            if(event.type == pygame.KEYDOWN):
+                if event.key == pygame.K_0:
+                    if active1 and username!="":
+                        state="wordle"
+                        wordle()
+                    elif active2 and new_name!="":
+                        wordle()
+                
+        
+        SCREEN.fill("white")
+        if active1:
+            color1 = color_active
+        elif active2:
+            color2 = color_active
+        else:
+            color1 = color_passive
+            color2 = color_passive
+        pygame.draw.rect(SCREEN, color1, NAME_RECT, 2)
+        NAME_TEXT = KEYBOARD_FONT.render(username, True,"black")
+        SCREEN.blit(NAME_TEXT,NAME_RECT)
+        NAME_RECT.w = max(100,NAME_TEXT.get_width()+10)
+        
+        pygame.draw.rect(SCREEN, color2, NEW_NAME_RECT, 2)
+        NEW_NAME_TEXT = KEYBOARD_FONT.render(new_name, True,"black")
+        SCREEN.blit(NEW_NAME_TEXT,NEW_NAME_RECT)
+        NEW_NAME_RECT.w = max(100,NEW_NAME_TEXT.get_width()+10)
+        
+        LOGIN_TEXT = DISPLAY_FONT.render("""Login""", True, "black", "white")
+        LOGIN_TEXT_RECT = LOGIN_TEXT.get_rect()
+        LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+        SCREEN.blit(LOGIN_TEXT,LOGIN_TEXT_RECT)
+        
+        SIGNUP_TEXT = DISPLAY_FONT.render("""Sign Up""", True, "black", "white")
+        SIGNUP_TEXT_RECT = SIGNUP_TEXT.get_rect()
+        SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
+        SCREEN.blit(SIGNUP_TEXT,SIGNUP_TEXT_RECT)
+        
+        pygame.display.update()
+ 
+def wordle():
+    global wordle_start, play_BG_Sounds, key_pressed
+    while state=="wordle":
+        SCREEN.fill("White")
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            if wordle_start == False:
+                initialWordle()
+                cur_bg = ""
+                elevator.set_volume(0.4)
+                elevator.play()
+                
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                    cur_bg = "nature"
+                    SCREEN.fill("white")
+                    SCREEN.blit(NATURE_BG, NATURE_RECT)
+                    keyboard.drawKeyboard()
+                    with open("wordLists/nature.txt", "r") as natureWordsFile:
+                        natureWords = natureWordsFile.read().splitlines()
+                    current_answer = random.choice(natureWords)
+                    wordle_start = True
+                    
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                    cur_bg = "food"
+                    SCREEN.fill("white")
+                    SCREEN.blit(FOOD_BG, FOOD_RECT)
+                    keyboard.drawKeyboard()
+                    with open("wordLists/food.txt", "r") as foodWordsFile:
+                        foodWords = foodWordsFile.read().splitlines()
+                    current_answer = random.choice(foodWords)
+                    wordle_start = True
+                    
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                    cur_bg = "animals"
+                    SCREEN.fill("white")
+                    SCREEN.blit(CATS_BG, CATS_RECT)
+                    keyboard.drawKeyboard()
+                    with open("wordLists/animals.txt", "r") as animalWordsFile:
+                        animalWords = animalWordsFile.read().splitlines()
+                    current_answer = random.choice(animalWords)
+                    wordle_start = True
+                    
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                    SCREEN.fill("white")
+                    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    keyboard.drawKeyboard()
+                    with open("wordLists/words.txt", "r") as allWordsFile:
+                        allWords = allWordsFile.read().splitlines()
+                    current_answer = random.choice(allWords)
+                    wordle_start = True
+                    
+                pygame.display.update()
+            # if event.type == pygame.MOUSEBUTTONDOWN:
+            #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
+                #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
+            if wordle_start == True:
+                elevator.stop()
+                if(play_BG_Sounds==True):
+                    backgroundSounds(cur_bg)
+                    play_BG_Sounds=False
+                if game_result != "":
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                        reset()
+                if event.type == pygame.KEYDOWN:
+                    print(event.key)
+                    print(current_answer)
+                    if event.key == pygame.K_RETURN:
+                        #if game is finished
+                        if game_result != "":
+                            end_display()
+                        else:
+                            if len(current_guess_string) == 5:
+                                temp = False
+                                with open("wordLists/words.txt",'r') as text_file:
+                                    lines = text_file.read().splitlines()
+                                for line in lines:
+                                    if current_guess_string == line:
+                                        check_guess(current_guess, current_answer)
+                                        soundCorrect(cur_bg)
+                                        temp = True
+                                if temp == False:
+                                    error.play()
+                                    errorPopup = tkinter.Tk()
+                                    placement = ttk.Frame(errorPopup, padding=75)
+                                    placement.grid()
+                                    ttk.Label(placement, background= "yellow", font="Times", text="Please enter a valid word.").grid(column=0, row=0)
+                                    ttk.Button(placement, text="Ok", padding=10, command=errorPopup.destroy).grid(column=0, row=2)
+                                    errorPopup.mainloop()           
+                    
+                    elif event.key == pygame.K_BACKSPACE:
+                        if len(current_guess_string) > 0:
+                            delete_letter()
+                    else:
+                        key_pressed = event.unicode.lower()
+                        if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
+                            if len(current_guess_string) < 5:
+                                add_new_letter()
 
-            
-       
+state="login"
+login()
+        
 
