@@ -59,6 +59,8 @@ forth
 first
 stand
 belly
+cared
+canes
 ivory
 seedy
 print
