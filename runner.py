@@ -500,8 +500,9 @@ def login():
  
 def wordle():
     global wordle_start, play_BG_Sounds, key_pressed
+    SCREEN.fill("White")
     while state=="wordle":
-        SCREEN.fill("White")
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
