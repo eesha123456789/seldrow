@@ -462,8 +462,9 @@ def login():
                         state="wordle"
                         wordle()
                     elif active2 and new_name!="":
+                        state=="wordle"  
+                        db.reference("/Player").push().set(new_name)
                         wordle()
-                
         
         SCREEN.fill("white")
         if active1:
