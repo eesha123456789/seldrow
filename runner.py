@@ -558,6 +558,7 @@ def wordle():
             #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
                 #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
             if wordle_start == True:
+
                 elevator.stop()
                 if(play_BG_Sounds==True):
                     backgroundSounds(cur_bg)
@@ -566,9 +567,9 @@ def wordle():
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                         reset()
                 if event.type == pygame.KEYDOWN:
-                    print(event.key)
-                    print(current_answer)
+                    #print(event.key)
                     if event.key == pygame.K_RETURN:
+                        print(current_answer)
                         #if game is finished
                         if game_result != "":
                             end_display()
