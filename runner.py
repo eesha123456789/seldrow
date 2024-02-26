@@ -444,7 +444,16 @@ def login():
                 else:
                     active1 = False
                     active2 = False
+                    
             if(event.type == pygame.KEYDOWN):
+                if event.key == pygame.K_0:
+                    if active1 and username!="":
+                        state ="wordle"
+                        wordle()
+                    elif active2 and new_name!="":
+                        state ="wordle"  
+                        db.reference("/Player").push().set(new_name)
+                        wordle()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
                         username = username[:-1]
@@ -456,15 +465,8 @@ def login():
                             new_name = new_name[:-1]
                         else:
                             new_name += event.unicode
-            if(event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_0:
-                    if active1 and username!="":
-                        state="wordle"
-                        wordle()
-                    elif active2 and new_name!="":
-                        state=="wordle"  
-                        db.reference("/Player").push().set(new_name)
-                        wordle()
+            
+                        
         
         SCREEN.fill("white")
         if active1:
