@@ -444,7 +444,16 @@ def login():
                 else:
                     active1 = False
                     active2 = False
+                    
             if(event.type == pygame.KEYDOWN):
+                if event.key == pygame.K_0:
+                    if active1 and username!="":
+                        state ="wordle"
+                        wordle()
+                    elif active2 and new_name!="":
+                        state ="wordle"  
+                        db.reference("/Player").push().set(new_name)
+                        wordle()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
                         username = username[:-1]
@@ -456,14 +465,8 @@ def login():
                             new_name = new_name[:-1]
                         else:
                             new_name += event.unicode
-            if(event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_0:
-                    if active1 and username!="":
-                        state="wordle"
-                        wordle()
-                    elif active2 and new_name!="":
-                        wordle()
-                
+            
+                        
         
         SCREEN.fill("white")
         if active1:
@@ -496,9 +499,10 @@ def login():
         pygame.display.update()
  
 def wordle():
-    global wordle_start, play_BG_Sounds, key_pressed
+    global wordle_start, play_BG_Sounds, key_pressed, current_answer
+    SCREEN.fill("White")
     while state=="wordle":
-        SCREEN.fill("White")
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -554,6 +558,7 @@ def wordle():
             #    if beach_button.checkForInput(WORDLE_POS_MOUSE):
                 #       SCREEN.blit(BEACH_BG, BEACH_BG.get_rect())
             if wordle_start == True:
+
                 elevator.stop()
                 if(play_BG_Sounds==True):
                     backgroundSounds(cur_bg)
@@ -562,9 +567,9 @@ def wordle():
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                         reset()
                 if event.type == pygame.KEYDOWN:
-                    print(event.key)
-                    print(current_answer)
+                    #print(event.key)
                     if event.key == pygame.K_RETURN:
+                        print(current_answer)
                         #if game is finished
                         if game_result != "":
                             end_display()
@@ -596,7 +601,8 @@ def wordle():
                             if len(current_guess_string) < 5:
                                 add_new_letter()
 
-state="login"
-login()
+while True:
+    state="login"
+    login()
         
 
