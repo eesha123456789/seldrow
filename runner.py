@@ -499,7 +499,7 @@ def login():
         pygame.display.update()
  
 def wordle():
-    global wordle_start, play_BG_Sounds, key_pressed
+    global wordle_start, play_BG_Sounds, key_pressed, current_answer
     SCREEN.fill("White")
     while state=="wordle":
         
@@ -600,7 +600,8 @@ def wordle():
                             if len(current_guess_string) < 5:
                                 add_new_letter()
 
-state="login"
-login()
+while True:
+    state="login"
+    login()
         
 
