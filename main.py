@@ -19,6 +19,7 @@ import random #for random answer in words
 from pygame import mixer
 from tkinter import *
 from tkinter import ttk
+import asyncio
 
 
 pygame.init() #initializes all modules to get everything started
@@ -446,7 +447,7 @@ def login():
                     active2 = False
                     
             if(event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_0:
+                if event.key == pygame.K_RETURN:
                     if active1 and username!="":
                         state ="wordle"
                         wordle()
@@ -601,8 +602,12 @@ def wordle():
                             if len(current_guess_string) < 5:
                                 add_new_letter()
 
-while True:
-    state="login"
-    login()
+state="login"
+async def main():
+    while True:
+        login()
+        await asyncio.sleep(0)
+
+asyncio.run(main())
         
 
