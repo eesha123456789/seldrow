@@ -128,9 +128,11 @@ def backgroundSounds(bg):
 # 2nd parameter is the font size
 LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 40)
 DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 30)
+SMALL_DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 18)
 RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
 TITLE_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 100)
+LOGIN_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 30)
 wordle_start = False
 
 def initialWordle():
@@ -507,15 +509,31 @@ def login():
         TITLE_TEXT_RECT.center = (WIDTH // 2, HEIGHT - 550)
         SCREEN.blit(TITLE_TEXT, TITLE_TEXT_RECT)
 
-        LOGIN_TEXT = DISPLAY_FONT.render("""Login""", True, "black", "white")
+        #idk if we should uselogin font here or display font
+        LOGIN_TEXT = LOGIN_FONT.render("""Login""", True, "black", "white")
         LOGIN_TEXT_RECT = LOGIN_TEXT.get_rect()
         LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 - 100)
         SCREEN.blit(LOGIN_TEXT,LOGIN_TEXT_RECT)
         
-        SIGNUP_TEXT = DISPLAY_FONT.render("""Sign Up""", True, "black", "white")
+        LOGIN_TEXT_2 = SMALL_DISPLAY_FONT.render("""enter your username""", True, "black", "white")
+        LOGIN_TEXT_2_RECT = LOGIN_TEXT_2.get_rect()
+        LOGIN_TEXT_2_RECT.center = (WIDTH // 2, HEIGHT // 2 - 65)
+        SCREEN.blit(LOGIN_TEXT_2,LOGIN_TEXT_2_RECT)
+        
+        SIGNUP_TEXT = LOGIN_FONT.render("""Sign Up""", True, "black", "white")
         SIGNUP_TEXT_RECT = SIGNUP_TEXT.get_rect()
         SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 100)
         SCREEN.blit(SIGNUP_TEXT,SIGNUP_TEXT_RECT)
+
+        SIGNUP_TEXT_2 = SMALL_DISPLAY_FONT.render("""create new username""", True, "black", "white")
+        SIGNUP_TEXT_2_RECT = SIGNUP_TEXT_2.get_rect()
+        SIGNUP_TEXT_2_RECT.center = (WIDTH // 2, HEIGHT // 2 + 125)
+        SCREEN.blit(SIGNUP_TEXT_2,SIGNUP_TEXT_2_RECT)
+
+        SIGNUP_TEXT_3 = SMALL_DISPLAY_FONT.render("""(case sensitive)""", True, "black", "white")
+        SIGNUP_TEXT_3_RECT = SIGNUP_TEXT_3.get_rect()
+        SIGNUP_TEXT_3_RECT.center = (WIDTH // 2, HEIGHT // 2 + 150)
+        SCREEN.blit(SIGNUP_TEXT_3,SIGNUP_TEXT_3_RECT)
 
         SCREEN.blit(EESHA_PIC, EESHA_RECT)
         SCREEN.blit(SOPHIA_PIC, SOPHIA_RECT)
