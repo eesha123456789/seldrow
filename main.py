@@ -473,13 +473,13 @@ def login():
                     if active1 and username!="":
                         state ="wordle"
                         name = username
-                        coins = db.reference("/Players/" + name + "/Coins").get()
+                        #coins = db.reference("/Players/" + name + "/Coins").get()
                         wordle()
                     elif active2 and new_name!="":
                         state ="wordle"  
                         name = new_name
                         db.reference("/Players/").update({new_name: {"Coins":0}})
-                        coins = db.reference("/Players/" + name + "/Coins").get()
+                        #coins = db.reference("/Players/" + name + "/Coins").get()
                         wordle()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
@@ -663,7 +663,10 @@ def wordle():
 
 state="login"
 async def main():
+    global coins, name
     while True:
+        coins = db.reference("/Players/" + name + "/Coins").get()
+        print(coins)
         login()
         await asyncio.sleep(0)
 
