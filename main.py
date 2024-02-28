@@ -469,6 +469,7 @@ def login():
                     
             if(event.type == pygame.KEYDOWN):
                 if event.key == pygame.K_RETURN:
+                    #check to see if username exists for both active 1 and active two
                     if active1 and username!="":
                         state ="wordle"
                         name = username
