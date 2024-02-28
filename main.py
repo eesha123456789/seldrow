@@ -44,6 +44,7 @@ YELLOW = "#FFDF00"
 GREY = "#787c7e"
 LIGHT_GREY = "#cfcfcf"
 
+#make this bigger so we can have a menu on top of the screen
 WIDTH, HEIGHT = 800, 660
 WORDLE_BG_SIZE = (300,390)
 #Variables for set up of dislay window (how it looks)
@@ -74,6 +75,19 @@ WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2))
 WORDLE_LOSS = pygame.image.load("bg_folder/wordle_loss.png") 
 WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
+#us!!
+EESHA_PIC = pygame.image.load("image_folder/eesha.png")
+EESHA_PIC = pygame.transform.scale(EESHA_PIC, (220,500))
+EESHA_RECT = EESHA_PIC.get_rect(center = ((WIDTH * 4)//5, HEIGHT//2 + 50))
+
+SOPHIA_PIC = pygame.image.load("image_folder/sophia.png")
+SOPHIA_PIC = pygame.transform.scale(SOPHIA_PIC, (220,460))
+SOPHIA_RECT = SOPHIA_PIC.get_rect(center = (WIDTH //5, HEIGHT//2 + 70))
+
+#database images (including coin tracker)
+COIN_TRACKER = pygame.image.load("image_folder/coin.png")
+COIN_TRACKER = pygame.transform.scale(COIN_TRACKER, (180, 60))
+COIN_TRACKER_RECT = COIN_TRACKER.get_rect(center = (WIDTH-100, HEIGHT-50))
 
 #sound effects
 eating = pygame.mixer.Sound("sounds/Eating.wav")
@@ -116,6 +130,7 @@ LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 40)
 DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 30)
 RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
+TITLE_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 100)
 wordle_start = False
 
 def initialWordle():
@@ -426,8 +441,8 @@ def login():
     active2 = False
     
     while state=="login":
-        NAME_RECT = pygame.Rect((WIDTH/2)-100,200,200,40)
-        NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,400,200,40)
+        NAME_RECT = pygame.Rect((WIDTH/2)-100,300,200,40)
+        NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,500,200,40)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -487,15 +502,23 @@ def login():
         SCREEN.blit(NEW_NAME_TEXT,NEW_NAME_RECT)
         NEW_NAME_RECT.w = max(100,NEW_NAME_TEXT.get_width()+10)
         
+        TITLE_TEXT = TITLE_FONT.render("""seldrow""", True, "pink", "white")
+        TITLE_TEXT_RECT = TITLE_TEXT.get_rect()
+        TITLE_TEXT_RECT.center = (WIDTH // 2, HEIGHT - 550)
+        SCREEN.blit(TITLE_TEXT, TITLE_TEXT_RECT)
+
         LOGIN_TEXT = DISPLAY_FONT.render("""Login""", True, "black", "white")
         LOGIN_TEXT_RECT = LOGIN_TEXT.get_rect()
-        LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+        LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 - 100)
         SCREEN.blit(LOGIN_TEXT,LOGIN_TEXT_RECT)
         
         SIGNUP_TEXT = DISPLAY_FONT.render("""Sign Up""", True, "black", "white")
         SIGNUP_TEXT_RECT = SIGNUP_TEXT.get_rect()
-        SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
+        SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 100)
         SCREEN.blit(SIGNUP_TEXT,SIGNUP_TEXT_RECT)
+
+        SCREEN.blit(EESHA_PIC, EESHA_RECT)
+        SCREEN.blit(SOPHIA_PIC, SOPHIA_RECT)
         
         pygame.display.update()
  
@@ -514,11 +537,13 @@ def wordle():
                 cur_bg = ""
                 elevator.set_volume(0.4)
                 elevator.play()
+                SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                     cur_bg = "nature"
                     SCREEN.fill("white")
                     SCREEN.blit(NATURE_BG, NATURE_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/nature.txt", "r") as natureWordsFile:
                         natureWords = natureWordsFile.read().splitlines()
@@ -529,6 +554,7 @@ def wordle():
                     cur_bg = "food"
                     SCREEN.fill("white")
                     SCREEN.blit(FOOD_BG, FOOD_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/food.txt", "r") as foodWordsFile:
                         foodWords = foodWordsFile.read().splitlines()
@@ -539,6 +565,7 @@ def wordle():
                     cur_bg = "animals"
                     SCREEN.fill("white")
                     SCREEN.blit(CATS_BG, CATS_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/animals.txt", "r") as animalWordsFile:
                         animalWords = animalWordsFile.read().splitlines()
@@ -548,6 +575,7 @@ def wordle():
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/words.txt", "r") as allWordsFile:
                         allWords = allWordsFile.read().splitlines()
