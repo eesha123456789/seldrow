@@ -44,6 +44,7 @@ YELLOW = "#FFDF00"
 GREY = "#787c7e"
 LIGHT_GREY = "#cfcfcf"
 
+#make this bigger so we can have a menu on top of the screen
 WIDTH, HEIGHT = 800, 660
 WORDLE_BG_SIZE = (300,390)
 #Variables for set up of dislay window (how it looks)
@@ -74,6 +75,19 @@ WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2))
 WORDLE_LOSS = pygame.image.load("bg_folder/wordle_loss.png") 
 WORDLE_LOSS_RECT = WORDLE_LOSS.get_rect(center=(WIDTH//2, HEIGHT//2)) 
 
+#us!!
+EESHA_PIC = pygame.image.load("image_folder/eesha.png")
+EESHA_PIC = pygame.transform.scale(EESHA_PIC, (220,500))
+EESHA_RECT = EESHA_PIC.get_rect(center = ((WIDTH * 4)//5, HEIGHT//2 + 50))
+
+SOPHIA_PIC = pygame.image.load("image_folder/sophia.png")
+SOPHIA_PIC = pygame.transform.scale(SOPHIA_PIC, (220,460))
+SOPHIA_RECT = SOPHIA_PIC.get_rect(center = (WIDTH //5, HEIGHT//2 + 70))
+
+#database images (including coin tracker)
+COIN_TRACKER = pygame.image.load("image_folder/coin.png")
+COIN_TRACKER = pygame.transform.scale(COIN_TRACKER, (180, 60))
+COIN_TRACKER_RECT = COIN_TRACKER.get_rect(center = (WIDTH-100, HEIGHT-50))
 
 #sound effects
 eating = pygame.mixer.Sound("sounds/Eating.wav")
@@ -114,8 +128,11 @@ def backgroundSounds(bg):
 # 2nd parameter is the font size
 LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 40)
 DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 30)
+SMALL_DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 18)
 RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
+TITLE_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 100)
+LOGIN_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 30)
 wordle_start = False
 
 def initialWordle():
@@ -165,6 +182,10 @@ guesses = [[]] * 6
 current_guess = []
 current_guess_string = ""
 game_result = ""
+
+#database global variables
+name = ""
+coins = 0
 
 #Main Menu Button
 #WORDLE_POS_MOUSE = pygame.mouse.get_pos()
@@ -415,7 +436,7 @@ def end_display():
     pygame.display.update()
 
 def login():
-    global state
+    global state, name, coins
     username = ""
     new_name = ""
     color_active = pygame.Color('lightskyblue3')
@@ -426,8 +447,8 @@ def login():
     active2 = False
     
     while state=="login":
-        NAME_RECT = pygame.Rect((WIDTH/2)-100,200,200,40)
-        NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,400,200,40)
+        NAME_RECT = pygame.Rect((WIDTH/2)-100,300,200,40)
+        NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,500,200,40)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -435,12 +456,25 @@ def login():
                 
             if(event.type == pygame.KEYDOWN):
                 if event.key == pygame.K_RETURN:
+                    #check to see if username exists for both active 1 and active two
                     if active1 and username!="":
+<<<<<<< HEAD
                         state = "wordle"
                         wordle()
                     elif active2 and new_name!="":
                         state ="wordle"  
                         db.reference("/Players/").update({new_name:{"Coins":0}})
+=======
+                        state ="wordle"
+                        name = username
+                        coins = db.reference("/Players/" + name + "/Coins").get()
+                        wordle()
+                    elif active2 and new_name!="":
+                        state ="wordle"  
+                        name = new_name
+                        db.reference("/Players/").update({new_name: {"Coins":0}})
+                        coins = db.reference("/Players/" + name + "/Coins").get()
+>>>>>>> 63dad71552530c6c29441b35e29089e0b1da8397
                         wordle()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
@@ -467,8 +501,6 @@ def login():
                     active1 = False
                     active2 = False
             
-                        
-        
         SCREEN.fill("white")
         if active1:
             color1 = color_active
@@ -480,33 +512,61 @@ def login():
             color1 = color_passive
             color2 = color_passive
         pygame.draw.rect(SCREEN, color1, NAME_RECT, 2)
-        NAME_TEXT = KEYBOARD_FONT.render(username, True,"black")
+        NAME_TEXT = DISPLAY_FONT.render(username, True,"black")
         SCREEN.blit(NAME_TEXT,NAME_RECT)
         NAME_RECT.w = max(100,NAME_TEXT.get_width()+10)
         
         pygame.draw.rect(SCREEN, color2, NEW_NAME_RECT, 2)
-        NEW_NAME_TEXT = KEYBOARD_FONT.render(new_name, True,"black")
+        NEW_NAME_TEXT = DISPLAY_FONT.render(new_name, True,"black")
         SCREEN.blit(NEW_NAME_TEXT,NEW_NAME_RECT)
         NEW_NAME_RECT.w = max(100,NEW_NAME_TEXT.get_width()+10)
         
-        LOGIN_TEXT = DISPLAY_FONT.render("""Login""", True, "black", "white")
+        TITLE_TEXT = TITLE_FONT.render("""seldrow""", True, "pink", "white")
+        TITLE_TEXT_RECT = TITLE_TEXT.get_rect()
+        TITLE_TEXT_RECT.center = (WIDTH // 2, HEIGHT - 550)
+        SCREEN.blit(TITLE_TEXT, TITLE_TEXT_RECT)
+
+        #idk if we should uselogin font here or display font
+        LOGIN_TEXT = LOGIN_FONT.render("""Login""", True, "black", "white")
         LOGIN_TEXT_RECT = LOGIN_TEXT.get_rect()
-        LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+        LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 - 100)
         SCREEN.blit(LOGIN_TEXT,LOGIN_TEXT_RECT)
         
-        SIGNUP_TEXT = DISPLAY_FONT.render("""Sign Up""", True, "black", "white")
+        LOGIN_TEXT_2 = SMALL_DISPLAY_FONT.render("""enter your username""", True, "black", "white")
+        LOGIN_TEXT_2_RECT = LOGIN_TEXT_2.get_rect()
+        LOGIN_TEXT_2_RECT.center = (WIDTH // 2, HEIGHT // 2 - 65)
+        SCREEN.blit(LOGIN_TEXT_2,LOGIN_TEXT_2_RECT)
+        
+        SIGNUP_TEXT = LOGIN_FONT.render("""Sign Up""", True, "black", "white")
         SIGNUP_TEXT_RECT = SIGNUP_TEXT.get_rect()
-        SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
+        SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2 + 100)
         SCREEN.blit(SIGNUP_TEXT,SIGNUP_TEXT_RECT)
+
+        SIGNUP_TEXT_2 = SMALL_DISPLAY_FONT.render("""create new username""", True, "black", "white")
+        SIGNUP_TEXT_2_RECT = SIGNUP_TEXT_2.get_rect()
+        SIGNUP_TEXT_2_RECT.center = (WIDTH // 2, HEIGHT // 2 + 125)
+        SCREEN.blit(SIGNUP_TEXT_2,SIGNUP_TEXT_2_RECT)
+
+        SIGNUP_TEXT_3 = SMALL_DISPLAY_FONT.render("""(case sensitive)""", True, "black", "white")
+        SIGNUP_TEXT_3_RECT = SIGNUP_TEXT_3.get_rect()
+        SIGNUP_TEXT_3_RECT.center = (WIDTH // 2, HEIGHT // 2 + 150)
+        SCREEN.blit(SIGNUP_TEXT_3,SIGNUP_TEXT_3_RECT)
+
+        SCREEN.blit(EESHA_PIC, EESHA_RECT)
+        SCREEN.blit(SOPHIA_PIC, SOPHIA_RECT)
         
         pygame.display.update()
  
 def wordle():
-    global wordle_start, play_BG_Sounds, key_pressed, current_answer
+    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins
     SCREEN.fill("White")
+<<<<<<< HEAD
     elevator.set_volume(0.4)
     elevator.play()
     while state=="wordle":
+=======
+    while state =="wordle":
+>>>>>>> 63dad71552530c6c29441b35e29089e0b1da8397
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -516,12 +576,25 @@ def wordle():
             if wordle_start == False:
                 initialWordle()
                 cur_bg = ""
+<<<<<<< HEAD
                 
+=======
+                elevator.set_volume(0.4)
+                elevator.play()
+                SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
+                
+                print(coins)
+                COINS_TEXT = LOGIN_FONT.render(str(coins), True, "black", "pink")
+                COINS_TEXT_RECT = COINS_TEXT.get_rect()
+                COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
+                SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
+>>>>>>> 63dad71552530c6c29441b35e29089e0b1da8397
                 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                     cur_bg = "nature"
                     SCREEN.fill("white")
                     SCREEN.blit(NATURE_BG, NATURE_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/nature.txt", "r") as natureWordsFile:
                         natureWords = natureWordsFile.read().splitlines()
@@ -532,6 +605,7 @@ def wordle():
                     cur_bg = "food"
                     SCREEN.fill("white")
                     SCREEN.blit(FOOD_BG, FOOD_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/food.txt", "r") as foodWordsFile:
                         foodWords = foodWordsFile.read().splitlines()
@@ -542,6 +616,7 @@ def wordle():
                     cur_bg = "animals"
                     SCREEN.fill("white")
                     SCREEN.blit(CATS_BG, CATS_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/animals.txt", "r") as animalWordsFile:
                         animalWords = animalWordsFile.read().splitlines()
@@ -551,6 +626,7 @@ def wordle():
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+                    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                     keyboard.drawKeyboard()
                     with open("wordLists/words.txt", "r") as allWordsFile:
                         allWords = allWordsFile.read().splitlines()
