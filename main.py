@@ -729,6 +729,18 @@ def wordle():
                             if len(current_guess_string) < 5:
                                 add_new_letter()
 
+#def menu():
+
+#def tutorial():
+
+#def leaderboard():
+
+#def store():
+
+#def inventory():
+
+#def logout():
+
 state="login"
 async def main():
     global coins, name
