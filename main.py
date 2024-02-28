@@ -43,6 +43,7 @@ GREEN = "#77DD77"
 YELLOW = "#FFDF00"
 GREY = "#787c7e"
 LIGHT_GREY = "#cfcfcf"
+COIN_PINK = "ffd7df"
 
 #make this bigger so we can have a menu on top of the screen
 WIDTH, HEIGHT = 800, 660
@@ -371,7 +372,8 @@ def add_new_letter():
     letter_x_pos += (LETTER_X_SPACING + LETTER_SIZE)
     current_guess_string += key_pressed
     current_guess.append(new_letter)
-    guesses[guesses_count - 1].append(new_letter)
+    guesses_index = guesses_count - 1
+    guesses[guesses_index].append(new_letter)
 
     for i in guesses:
         for j in i:
@@ -382,7 +384,8 @@ def delete_letter():
     global letter_x_pos, current_guess_string, current_guess, guesses
     current_guess_string = current_guess_string[:-1]
     #need to double check this
-    del(guesses[guesses_count - 1][len(current_guess) - 1])
+    guesses_index = guesses_count - 1
+    del(guesses[guesses_index][len(current_guess) - 1])
     letter_x_pos -= (LETTER_X_SPACING + LETTER_SIZE)
     #just added
     current_guess[len(current_guess) - 1].bg_color = "white"
@@ -417,10 +420,33 @@ def reset():
     kb_y_pos = 430
     
 def end_display():
+    global coins, guesses_count, name
     foodBG_Sound.stop()
     natureBG_Sound.stop()
     animalsBG_Sound.stop()
     if game_result == "W":
+        #do this bc guesses_count is lower by the actual number for some reason
+        num_guesses = guesses_count + 1
+        db_coins = db.reference("/Players/" + name + "/Coins").get()
+        if num_guesses == 1:
+            coins = db_coins + 6
+            db.reference("/Players/"+name).update({"Coins": (coins)})
+        if num_guesses == 2:
+            coins = db_coins + 5
+            db.reference("/Players/"+name).update({"Coins": (coins)})
+        if num_guesses == 3:
+            coins = db_coins + 4
+            db.reference("/Players/"+name).update({"Coins": (coins)})
+        if num_guesses == 4:
+            coins = db_coins + 3
+            db.reference("/Players/"+name).update({"Coins": (coins)})
+        if num_guesses == 5:
+            coins = db_coins + 2
+            db.reference("/Players/"+name).update({"Coins": (coins)})
+        if num_guesses == 6:
+            coins = db_coins + 1
+            db.reference("/Players/"+name).update({"Coins": (coins)})
+        
         SCREEN.blit(WORDLE_WIN, WORDLE_WIN_RECT)
         congrats.play()
     elif game_result == "L":
@@ -468,19 +494,38 @@ def login():
                     active2 = False
                     
             if(event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_RETURN:
-                    #check to see if username exists for both active 1 and active two
+                if event.key == pygame.K_RETURN:                  
                     if active1 and username!="":
-                        state ="wordle"
                         name = username
-                        #coins = db.reference("/Players/" + name + "/Coins").get()
-                        wordle()
+                        name_exists = db.reference("/Players/" + name).get()
+                        if name_exists is None:
+                            noUsernamePopup = tkinter.Tk()
+                            placement = ttk.Frame(noUsernamePopup, padding=75)
+                            placement.grid()
+                            ttk.Label(placement, background= "pink", font="Times", text="This username doesn't exist").grid(column=0, row=0)
+                            ttk.Button(placement, text="Ok", padding=10, command=noUsernamePopup.destroy).grid(column=0, row=2)
+                            noUsernamePopup.mainloop()
+                        
+                        else:
+                            state ="wordle"
+                            #coins = db.reference("/Players/" + name + "/Coins").get()
+                            wordle()
                     elif active2 and new_name!="":
-                        state ="wordle"  
                         name = new_name
-                        db.reference("/Players/").update({new_name: {"Coins":0}})
-                        #coins = db.reference("/Players/" + name + "/Coins").get()
-                        wordle()
+                        name_exists = db.reference("/Players/" + name).get()
+                        if name_exists is not None:
+                            alreadyExistsPopup = tkinter.Tk()
+                            placement = ttk.Frame(alreadyExistsPopup, padding=75)
+                            placement.grid()
+                            ttk.Label(placement, background= "pink", font="Times", text="This username already exists").grid(column=0, row=0)
+                            ttk.Button(placement, text="Ok", padding=10, command=alreadyExistsPopup.destroy).grid(column=0, row=2)
+                            alreadyExistsPopup.mainloop()
+
+                        else:
+                            state ="wordle"  
+                            db.reference("/Players/").update({new_name: {"Coins":0}})
+                            #coins = db.reference("/Players/" + name + "/Coins").get()
+                            wordle()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
                         username = username[:-1]
@@ -511,7 +556,7 @@ def login():
         SCREEN.blit(NEW_NAME_TEXT,NEW_NAME_RECT)
         NEW_NAME_RECT.w = max(100,NEW_NAME_TEXT.get_width()+10)
         
-        TITLE_TEXT = TITLE_FONT.render("""seldrow""", True, "pink", "white")
+        TITLE_TEXT = TITLE_FONT.render("""seldrow""", True, "pink", None)
         TITLE_TEXT_RECT = TITLE_TEXT.get_rect()
         TITLE_TEXT_RECT.center = (WIDTH // 2, HEIGHT - 550)
         SCREEN.blit(TITLE_TEXT, TITLE_TEXT_RECT)
@@ -548,7 +593,7 @@ def login():
         pygame.display.update()
  
 def wordle():
-    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins
+    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins, guesses_count
     SCREEN.fill("White")
     while state =="wordle":
         
@@ -564,8 +609,7 @@ def wordle():
                 elevator.play()
                 SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                 
-                print(coins)
-                COINS_TEXT = LOGIN_FONT.render(str(coins), True, "black", "pink")
+                COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
                 COINS_TEXT_RECT = COINS_TEXT.get_rect()
                 COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
                 SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
@@ -575,6 +619,12 @@ def wordle():
                     SCREEN.fill("white")
                     SCREEN.blit(NATURE_BG, NATURE_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
+
+                    COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
+                    COINS_TEXT_RECT = COINS_TEXT.get_rect()
+                    COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
+                    SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
+
                     keyboard.drawKeyboard()
                     with open("wordLists/nature.txt", "r") as natureWordsFile:
                         natureWords = natureWordsFile.read().splitlines()
@@ -586,6 +636,12 @@ def wordle():
                     SCREEN.fill("white")
                     SCREEN.blit(FOOD_BG, FOOD_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
+
+                    COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
+                    COINS_TEXT_RECT = COINS_TEXT.get_rect()
+                    COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
+                    SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
+
                     keyboard.drawKeyboard()
                     with open("wordLists/food.txt", "r") as foodWordsFile:
                         foodWords = foodWordsFile.read().splitlines()
@@ -597,6 +653,12 @@ def wordle():
                     SCREEN.fill("white")
                     SCREEN.blit(CATS_BG, CATS_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
+
+                    COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
+                    COINS_TEXT_RECT = COINS_TEXT.get_rect()
+                    COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
+                    SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
+
                     keyboard.drawKeyboard()
                     with open("wordLists/animals.txt", "r") as animalWordsFile:
                         animalWords = animalWordsFile.read().splitlines()
@@ -607,6 +669,12 @@ def wordle():
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
+
+                    COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
+                    COINS_TEXT_RECT = COINS_TEXT.get_rect()
+                    COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
+                    SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
+
                     keyboard.drawKeyboard()
                     with open("wordLists/words.txt", "r") as allWordsFile:
                         allWords = allWordsFile.read().splitlines()
@@ -666,6 +734,8 @@ async def main():
     global coins, name
     while True:
         coins = db.reference("/Players/" + name + "/Coins").get()
+        if coins is None:
+            coins = 0
         print(coins)
         login()
         await asyncio.sleep(0)
