@@ -741,6 +741,8 @@ def wordle():
 
 #def logout():
 
+#hi
+
 state="login"
 async def main():
     global coins, name
