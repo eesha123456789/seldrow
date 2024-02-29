@@ -44,7 +44,6 @@ GREEN = "#77DD77"
 YELLOW = "#FFDF00"
 GREY = "#787c7e"
 LIGHT_GREY = "#cfcfcf"
-
 COIN_PINK = "ffd7df"
 
 #make this bigger so we can have a menu on top of the screen
@@ -131,16 +130,11 @@ def backgroundSounds(bg):
 # 2nd parameter is the font size
 LETTER_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 40)
 DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 30)
-
-RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
-KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
-
 SMALL_DISPLAY_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 18)
 RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
 TITLE_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 100)
 LOGIN_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 30)
-
 wordle_start = False
 
 def initialWordle():
@@ -190,7 +184,6 @@ guesses = [[]] * 6
 current_guess = []
 current_guess_string = ""
 game_result = ""
-
 
 #database global variables
 name = ""
@@ -380,7 +373,6 @@ def add_new_letter():
     letter_x_pos += (LETTER_X_SPACING + LETTER_SIZE)
     current_guess_string += key_pressed
     current_guess.append(new_letter)
-    guesses[guesses_count - 1].append(new_letter)
     guesses_index = guesses_count - 1
     guesses[guesses_index].append(new_letter)
 
@@ -393,7 +385,6 @@ def delete_letter():
     global letter_x_pos, current_guess_string, current_guess, guesses
     current_guess_string = current_guess_string[:-1]
     #need to double check this
-    del(guesses[guesses_count - 1][len(current_guess) - 1])
     guesses_index = guesses_count - 1
     del(guesses[guesses_index][len(current_guess) - 1])
     letter_x_pos -= (LETTER_X_SPACING + LETTER_SIZE)
@@ -431,7 +422,6 @@ def reset():
     
 def end_display():
     global coins, guesses_count, name
-
     foodBG_Sound.stop()
     natureBG_Sound.stop()
     animalsBG_Sound.stop()
@@ -484,9 +474,6 @@ def login():
     active2 = False
     
     while state=="login":
-
-        NAME_RECT = pygame.Rect((WIDTH/2)-100,200,200,40)
-        NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,400,200,40)
         NAME_RECT = pygame.Rect((WIDTH/2)-100,300,200,40)
         NEW_NAME_RECT = pygame.Rect((WIDTH/2)-100,500,200,40)
         for event in pygame.event.get():
@@ -508,14 +495,6 @@ def login():
                     active2 = False
                     
             if(event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_RETURN:
-                    if active1 and username!="":
-                        state ="wordle"
-                        wordle()
-                    elif active2 and new_name!="":
-                        state ="wordle"  
-                        db.reference("/Player").push().set(new_name)
-                        wordle()
                 if event.key == pygame.K_RETURN:                  
                     if active1 and username!="":
                         name = username
@@ -569,28 +548,11 @@ def login():
             color1 = color_passive
             color2 = color_passive
         pygame.draw.rect(SCREEN, color1, NAME_RECT, 2)
-        NAME_TEXT = KEYBOARD_FONT.render(username, True,"black")
         NAME_TEXT = DISPLAY_FONT.render(username, True,"black")
-
         SCREEN.blit(NAME_TEXT,NAME_RECT)
         NAME_RECT.w = max(100,NAME_TEXT.get_width()+10)
         
         pygame.draw.rect(SCREEN, color2, NEW_NAME_RECT, 2)
-
-        NEW_NAME_TEXT = KEYBOARD_FONT.render(new_name, True,"black")
-        SCREEN.blit(NEW_NAME_TEXT,NEW_NAME_RECT)
-        NEW_NAME_RECT.w = max(100,NEW_NAME_TEXT.get_width()+10)
-        
-        LOGIN_TEXT = DISPLAY_FONT.render("""Login""", True, "black", "white")
-        LOGIN_TEXT_RECT = LOGIN_TEXT.get_rect()
-        LOGIN_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
-        SCREEN.blit(LOGIN_TEXT,LOGIN_TEXT_RECT)
-        
-        SIGNUP_TEXT = DISPLAY_FONT.render("""Sign Up""", True, "black", "white")
-        SIGNUP_TEXT_RECT = SIGNUP_TEXT.get_rect()
-        SIGNUP_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2)
-        SCREEN.blit(SIGNUP_TEXT,SIGNUP_TEXT_RECT)
-
         NEW_NAME_TEXT = DISPLAY_FONT.render(new_name, True,"black")
         SCREEN.blit(NEW_NAME_TEXT,NEW_NAME_RECT)
         NEW_NAME_RECT.w = max(100,NEW_NAME_TEXT.get_width()+10)
@@ -628,7 +590,6 @@ def login():
 
         SCREEN.blit(EESHA_PIC, EESHA_RECT)
         SCREEN.blit(SOPHIA_PIC, SOPHIA_RECT)
-
         
         pygame.display.update()
  
@@ -647,7 +608,6 @@ def wordle():
                 cur_bg = ""
                 elevator.set_volume(0.4)
                 elevator.play()
-
                 SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                 
                 COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
@@ -676,7 +636,6 @@ def wordle():
                     cur_bg = "food"
                     SCREEN.fill("white")
                     SCREEN.blit(FOOD_BG, FOOD_RECT)
-
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
 
                     COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
@@ -694,7 +653,6 @@ def wordle():
                     cur_bg = "animals"
                     SCREEN.fill("white")
                     SCREEN.blit(CATS_BG, CATS_RECT)
-
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
 
                     COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
@@ -711,7 +669,6 @@ def wordle():
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
-
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
 
                     COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
@@ -773,7 +730,6 @@ def wordle():
                             if len(current_guess_string) < 5:
                                 add_new_letter()
 
-
 #def menu():
 
 #def tutorial():
@@ -800,3 +756,4 @@ async def main():
         await asyncio.sleep(0)
 
 asyncio.run(main())
+        
