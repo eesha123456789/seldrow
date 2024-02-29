@@ -784,6 +784,13 @@ def menu():
     MENU_TEXT_RECT7 = MENU_TEXT7.get_rect()
     MENU_TEXT_RECT7.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(MENU_TEXT7,MENU_TEXT_RECT7)
+
+    SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
+    COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
+    COINS_TEXT_RECT = COINS_TEXT.get_rect()
+    COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
+    SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
+
     pygame.display.update()
     while state=="menu":
         for event in pygame.event.get():
