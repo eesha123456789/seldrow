@@ -142,7 +142,7 @@ RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
 TITLE_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 100)
 LOGIN_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 30)
-wordle_start = False
+wordle_start = False 
 
 def initialWordle():
     BG_TEXT1 = DISPLAY_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
