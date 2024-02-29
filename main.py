@@ -142,7 +142,7 @@ RESULT_FONT = pygame.font.Font("fonts/FredokaOne-Regular.otf", 60)
 KEYBOARD_FONT = pygame.font.Font("fonts/Square.ttf", 30)
 TITLE_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 100)
 LOGIN_FONT = pygame.font.Font("fonts/Aloevera-OVoWO.ttf", 30)
-wordle_start = False
+wordle_start = False 
 
 def initialWordle():
     BG_TEXT1 = DISPLAY_FONT.render("""Welcome to Seldrow! Pick a background.""", True, "black", "white")
@@ -161,7 +161,7 @@ def initialWordle():
     BG_TEXT_RECT4 = BG_TEXT4.get_rect()
     BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+50)
     SCREEN.blit(BG_TEXT4,BG_TEXT_RECT4)
-    BG_TEXT5 = DISPLAY_FONT.render("""Press 0 if your BORRINGG (lameeee)""", True, "black", "white")
+    BG_TEXT5 = DISPLAY_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
@@ -181,6 +181,10 @@ LETTER_SIZE = 50
 # Global variables
 words = []
 guesses_count = 0
+
+#for login
+username = ""
+new_name = ""
 
 #helps with preventing yellow square when the letter has alr been guessed correctly
 used_letters = ""
@@ -470,15 +474,14 @@ def end_display():
     pygame.display.update()
 
 def login():
-    global state, name, coins
-    username = ""
-    new_name = ""
+    global state, name, coins, username, new_name
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color("gray15")
     color1 = color_passive
     color2 = color_passive
     active1 = False
     active2 = False
+    username=""
     
     while state=="login":
         NAME_RECT = pygame.Rect((WIDTH/2)-100,300,200,40)
@@ -505,8 +508,8 @@ def login():
                 if event.key == pygame.K_RETURN:                  
                     if active1 and username!="":
                         name = username
-                        name_exists = db.reference("/Players/" + name).get()
-                        if name_exists is None:
+                        #name_exists = 
+                        if db.reference("/Players/" + name).get() is None:
                             noUsernamePopup = tkinter.Tk()
                             placement = ttk.Frame(noUsernamePopup, padding=75)
                             placement.grid()
@@ -515,9 +518,9 @@ def login():
                             noUsernamePopup.mainloop()
                         
                         else:
-                            state ="wordle"
+                            state ="menu"
                             #coins = db.reference("/Players/" + name + "/Coins").get()
-                            wordle()
+                            menu()
                     elif active2 and new_name!="":
                         name = new_name
                         name_exists = db.reference("/Players/" + name).get()
@@ -530,10 +533,10 @@ def login():
                             alreadyExistsPopup.mainloop()
 
                         else:
-                            state ="wordle"  
+                            state ="menu"  
                             db.reference("/Players/").update({new_name: {"Coins":0}})
                             #coins = db.reference("/Players/" + name + "/Coins").get()
-                            wordle()
+                            menu()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
                         username = username[:-1]
@@ -601,8 +604,10 @@ def login():
         pygame.display.update()
  
 def wordle():
-    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins, guesses_count
+    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins, guesses_count, state
     SCREEN.fill("White")
+    elevator.set_volume(0.4)
+    elevator.play()
     while state =="wordle":
         
         for event in pygame.event.get():
@@ -613,8 +618,6 @@ def wordle():
             if wordle_start == False:
                 initialWordle()
                 cur_bg = ""
-                elevator.set_volume(0.4)
-                elevator.play()
                 SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                 
                 COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
@@ -622,6 +625,15 @@ def wordle():
                 COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
                 SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
                 
+                BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+                BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+                BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2+200)
+                SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_0:
+                        state="menu"
+                        menu()
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                     cur_bg = "nature"
                     SCREEN.fill("white")
@@ -673,7 +685,7 @@ def wordle():
                     current_answer = random.choice(animalWords)
                     wordle_start = True
                     
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
@@ -736,30 +748,186 @@ def wordle():
                         if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
                             if len(current_guess_string) < 5:
                                 add_new_letter()
+    
+def menu():
+    global state
+    SCREEN.fill("white")
+    print("ok")
+    MENU_TEXT = LOGIN_FONT.render("""MAIN MENU""", True, "black", "white")
+    MENU_TEXT_RECT1 = MENU_TEXT.get_rect()
+    MENU_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(MENU_TEXT,MENU_TEXT_RECT1)
+    MENU_TEXT2 = DISPLAY_FONT.render("""Press 1 to for Tutorial""", True, "black", "white")
+    MENU_TEXT_RECT2 = MENU_TEXT2.get_rect()
+    MENU_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-150)
+    SCREEN.blit(MENU_TEXT2,MENU_TEXT_RECT2)
+    MENU_TEXT3 = DISPLAY_FONT.render("""Press 2 for Leaderboard""", True, "black", "white")
+    MENU_TEXT_RECT3 = MENU_TEXT3.get_rect()
+    MENU_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(MENU_TEXT3,MENU_TEXT_RECT3)
+    MENU_TEXT4 = DISPLAY_FONT.render("""Press 3 for Store""", True, "black", "white")
+    MENU_TEXT_RECT4 = MENU_TEXT4.get_rect()
+    MENU_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2-50)
+    SCREEN.blit(MENU_TEXT4,MENU_TEXT_RECT4)
+    MENU_TEXT5 = DISPLAY_FONT.render("""Press 4 for Inventory""", True, "black", "white")
+    MENU_TEXT_RECT5 = MENU_TEXT5.get_rect()
+    MENU_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2)
+    SCREEN.blit(MENU_TEXT5,MENU_TEXT_RECT5)
+    MENU_TEXT6 = DISPLAY_FONT.render("""Press 5 for Seldrow""", True, "black", "white")
+    MENU_TEXT_RECT6 = MENU_TEXT6.get_rect()
+    MENU_TEXT_RECT6.center = (WIDTH // 2, HEIGHT // 2+50)
+    SCREEN.blit(MENU_TEXT6,MENU_TEXT_RECT6)
+    MENU_TEXT7 = DISPLAY_FONT.render("""Press 6 for Logout""", True, "black", "white")
+    MENU_TEXT_RECT7 = MENU_TEXT7.get_rect()
+    MENU_TEXT_RECT7.center = (WIDTH // 2, HEIGHT // 2+100)
+    SCREEN.blit(MENU_TEXT7,MENU_TEXT_RECT7)
+    pygame.display.update()
+    while state=="menu":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    state="tutorial"
+                    tutorial()
+                elif event.key == pygame.K_2:
+                    state="leaderboard"
+                    leaderboard()
+                elif event.key == pygame.K_3:
+                    state="store"
+                    store()
+                elif event.key == pygame.K_4:
+                    state="inventory"
+                    inventory()
+                elif event.key == pygame.K_5:
+                    state="wordle"
+                    wordle()
+                elif event.key == pygame.K_6:
+                    logout()
+            
 
-#def menu():
+def tutorial():
+    global state
+    SCREEN.fill("white")
+    TUTORIAL_TEXT = LOGIN_FONT.render("""TUTORIAL""", True, "black", "white")
+    TUTORIAL_RECT = TUTORIAL_TEXT.get_rect()
+    TUTORIAL_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(TUTORIAL_TEXT,TUTORIAL_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    
+    pygame.display.update()
+    while state=="tutorial":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0:
+                    state="menu"
+                    print(state)
+                    menu()
+            
 
-#def tutorial():
+def leaderboard():
+    global state
+    print(state)
+    SCREEN.fill("white")
+    LEADERBOARD_TEXT = LOGIN_FONT.render("""LEADERBOARD""", True, "black", "white")
+    LEADERBOARD_TEXT_RECT = LEADERBOARD_TEXT.get_rect()
+    LEADERBOARD_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(LEADERBOARD_TEXT,LEADERBOARD_TEXT_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    pygame.display.update()
+    while state=="leaderboard":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0:
+                    state="menu"
+                    print(state)
+                    menu()
 
-#def leaderboard():
+def store():
+    global state
+    SCREEN.fill("white")
+    STORE_TEXT = LOGIN_FONT.render("""STORE""", True, "black", "white")
+    STORE_TEXT_RECT = STORE_TEXT.get_rect()
+    STORE_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(STORE_TEXT,STORE_TEXT_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    
+    pygame.display.update()
+    while state=="store":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0:
+                    state="menu"
+                    print(state)
+                    menu()
+                
+def inventory():
+    global state
+    SCREEN.fill("white")
+    INVENTORY_TEXT = LOGIN_FONT.render("""INVENTORY""", True, "black", "white")
+    INVENTORY_TEXT_RECT = INVENTORY_TEXT.get_rect()
+    INVENTORY_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(INVENTORY_TEXT,INVENTORY_TEXT_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    
+    pygame.display.update()
+    while state=="inventory":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0:
+                    state="menu"
+                    print(state)
+                    menu()
 
-#def store():
-
-#def inventory():
-
-#def logout():
-
-#hi
-
+def logout():
+    global state, coins, name, username, new_name
+    state="login"
+    name=""
+    coins=0
+    username=""
+    new_name=""
+    login()
+    
 state="login"
+login()
 async def main():
     global coins, name
     while True:
         coins = db.reference("/Players/" + name + "/Coins").get()
         if coins is None:
             coins = 0
-        print(coins)
-        login()
+        #print(coins)
+        
         await asyncio.sleep(0)
 
 asyncio.run(main())
