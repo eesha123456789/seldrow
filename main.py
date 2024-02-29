@@ -72,8 +72,8 @@ BACKGROUND = pygame.transform.scale(BACKGROUND, WORDLE_BG_SIZE)
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
 
 CUTE_BG = pygame.image.load("bg_folder/leaderboard_bg.jpg")
-CUTE_BG = pygame.transform.scale(CUTE_BG, (800, 660))
-CUTE_RECT = BACKGROUND.get_rect(center = (WIDTH//2, HEIGHT//2))
+CUTE_BG = pygame.transform.scale(CUTE_BG, (1200, 900))
+CUTE_RECT = BACKGROUND.get_rect(center = (0,0))
 
 LEADERBOARD = pygame.image.load("image_folder/leaderboard.png")
 LEADERBOARD = pygame.transform.scale(LEADERBOARD, (400, 600))
@@ -161,7 +161,7 @@ def initialWordle():
     BG_TEXT_RECT4 = BG_TEXT4.get_rect()
     BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+50)
     SCREEN.blit(BG_TEXT4,BG_TEXT_RECT4)
-    BG_TEXT5 = DISPLAY_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
+    BG_TEXT5 = DISPLAY_FONT.render("""Press 4 if your BORRINGG (lameeee)""", True, "black", "white")
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
@@ -632,6 +632,7 @@ def wordle():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_0:
                         state="menu"
+                        elevator.stop()
                         menu()
                     
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
@@ -685,7 +686,7 @@ def wordle():
                     current_answer = random.choice(animalWords)
                     wordle_start = True
                     
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
@@ -836,15 +837,12 @@ def tutorial():
 def leaderboard():
     global state
     print(state)
-    SCREEN.fill("white")
-    LEADERBOARD_TEXT = LOGIN_FONT.render("""LEADERBOARD""", True, "black", "white")
-    LEADERBOARD_TEXT_RECT = LEADERBOARD_TEXT.get_rect()
-    LEADERBOARD_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
-    SCREEN.blit(LEADERBOARD_TEXT,LEADERBOARD_TEXT_RECT)
-    
-    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    SCREEN.blit(CUTE_BG, CUTE_RECT)
+    SCREEN.blit(LEADERBOARD, LEADERBOARD_RECT)
+                    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", None)
     BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
-    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, 18)
     SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
     pygame.display.update()
     while state=="leaderboard":
