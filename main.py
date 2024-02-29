@@ -161,7 +161,7 @@ def initialWordle():
     BG_TEXT_RECT4 = BG_TEXT4.get_rect()
     BG_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2+50)
     SCREEN.blit(BG_TEXT4,BG_TEXT_RECT4)
-    BG_TEXT5 = DISPLAY_FONT.render("""Press 0 if your BORRINGG (lameeee)""", True, "black", "white")
+    BG_TEXT5 = DISPLAY_FONT.render("""Press b if your BORRINGG (lameeee)""", True, "black", "white")
     BG_TEXT_RECT5 = BG_TEXT5.get_rect()
     BG_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2+100)
     SCREEN.blit(BG_TEXT5,BG_TEXT_RECT5)
@@ -604,7 +604,7 @@ def login():
         pygame.display.update()
  
 def wordle():
-    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins, guesses_count
+    global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins, guesses_count, state
     SCREEN.fill("White")
     elevator.set_volume(0.4)
     elevator.play()
@@ -625,6 +625,15 @@ def wordle():
                 COINS_TEXT_RECT.center = (WIDTH-75, HEIGHT-45)
                 SCREEN.blit(COINS_TEXT,COINS_TEXT_RECT)
                 
+                BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+                BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+                BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2+200)
+                SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_0:
+                        state="menu"
+                        menu()
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                     cur_bg = "nature"
                     SCREEN.fill("white")
@@ -676,7 +685,7 @@ def wordle():
                     current_answer = random.choice(animalWords)
                     wordle_start = True
                     
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
                     SCREEN.fill("white")
                     SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
                     SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
@@ -748,26 +757,30 @@ def menu():
     MENU_TEXT_RECT1 = MENU_TEXT.get_rect()
     MENU_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-200)
     SCREEN.blit(MENU_TEXT,MENU_TEXT_RECT1)
-    MENU_TEXT2 = DISPLAY_FONT.render("""Press 1 to for a Tutorial""", True, "black", "white")
+    MENU_TEXT2 = DISPLAY_FONT.render("""Press 1 to for Tutorial""", True, "black", "white")
     MENU_TEXT_RECT2 = MENU_TEXT2.get_rect()
     MENU_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-150)
     SCREEN.blit(MENU_TEXT2,MENU_TEXT_RECT2)
-    MENU_TEXT3 = DISPLAY_FONT.render("""Press 2 for a Leaderboard""", True, "black", "white")
+    MENU_TEXT3 = DISPLAY_FONT.render("""Press 2 for Leaderboard""", True, "black", "white")
     MENU_TEXT_RECT3 = MENU_TEXT3.get_rect()
     MENU_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2-100)
     SCREEN.blit(MENU_TEXT3,MENU_TEXT_RECT3)
-    MENU_TEXT4 = DISPLAY_FONT.render("""Press 3 for a Store""", True, "black", "white")
+    MENU_TEXT4 = DISPLAY_FONT.render("""Press 3 for Store""", True, "black", "white")
     MENU_TEXT_RECT4 = MENU_TEXT4.get_rect()
     MENU_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2-50)
-    SCREEN.blit(MENU_TEXT3,MENU_TEXT_RECT3)
-    MENU_TEXT5 = DISPLAY_FONT.render("""Press 4 for a Inventory""", True, "black", "white")
+    SCREEN.blit(MENU_TEXT4,MENU_TEXT_RECT4)
+    MENU_TEXT5 = DISPLAY_FONT.render("""Press 4 for Inventory""", True, "black", "white")
     MENU_TEXT_RECT5 = MENU_TEXT5.get_rect()
     MENU_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2)
     SCREEN.blit(MENU_TEXT5,MENU_TEXT_RECT5)
-    MENU_TEXT6 = DISPLAY_FONT.render("""Press 5 for a Logout""", True, "black", "white")
+    MENU_TEXT6 = DISPLAY_FONT.render("""Press 5 for Seldrow""", True, "black", "white")
     MENU_TEXT_RECT6 = MENU_TEXT6.get_rect()
     MENU_TEXT_RECT6.center = (WIDTH // 2, HEIGHT // 2+50)
     SCREEN.blit(MENU_TEXT6,MENU_TEXT_RECT6)
+    MENU_TEXT7 = DISPLAY_FONT.render("""Press 6 for Logout""", True, "black", "white")
+    MENU_TEXT_RECT7 = MENU_TEXT7.get_rect()
+    MENU_TEXT_RECT7.center = (WIDTH // 2, HEIGHT // 2+100)
+    SCREEN.blit(MENU_TEXT7,MENU_TEXT_RECT7)
     pygame.display.update()
     while state=="menu":
         for event in pygame.event.get():
@@ -788,10 +801,11 @@ def menu():
                     state="inventory"
                     inventory()
                 elif event.key == pygame.K_5:
-                    logout()
-                elif event.key == pygame.K_6:
                     state="wordle"
                     wordle()
+                elif event.key == pygame.K_6:
+                    logout()
+            
 
 def tutorial():
     global state
