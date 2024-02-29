@@ -71,6 +71,13 @@ BACKGROUND = pygame.image.load("bg_folder/blankwordle.png")
 BACKGROUND = pygame.transform.scale(BACKGROUND, WORDLE_BG_SIZE)
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH//2, HEIGHT//2-120)) 
 
+CUTE_BG = pygame.image.load("bg_folder/leaderboard_bg.jpg")
+CUTE_BG = pygame.transform.scale(CUTE_BG, (800, 660))
+CUTE_RECT = BACKGROUND.get_rect(center = (WIDTH//2, HEIGHT//2))
+
+LEADERBOARD = pygame.image.load("image_folder/leaderboard.png")
+LEADERBOARD = pygame.transform.scale(LEADERBOARD, (400, 600))
+LEADERBOARD_RECT = LEADERBOARD.get_rect(center = (WIDTH//2, HEIGHT//2))
 
 WORDLE_WIN = pygame.image.load("bg_folder/wordle_win.png") 
 WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2)) 
