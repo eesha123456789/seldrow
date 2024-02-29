@@ -182,6 +182,10 @@ LETTER_SIZE = 50
 words = []
 guesses_count = 0
 
+#for login
+username = ""
+new_name = ""
+
 #helps with preventing yellow square when the letter has alr been guessed correctly
 used_letters = ""
 
@@ -470,7 +474,7 @@ def end_display():
     pygame.display.update()
 
 def login():
-    global state, name, coins
+    global state, name, coins, username, new_name
     username = ""
     new_name = ""
     color_active = pygame.Color('lightskyblue3')
@@ -736,26 +740,6 @@ def wordle():
                         if key_pressed in "abcdefghijklmnopqrstuvwxyz" and key_pressed != "":
                             if len(current_guess_string) < 5:
                                 add_new_letter()
-
-def tutorial():
-    SCREEN.fill("white")
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-    pygame.display.update()
-
-def leaderboard():
-    SCREEN.fill("white")
-
-def store():
-    SCREEN.fill("white")
-
-def inventory():
-    SCREEN.fill("white")
-
-def logout():
-    SCREEN.fill("white")
     
 def menu():
     SCREEN.fill("white")
@@ -787,6 +771,9 @@ def menu():
     pygame.display.update()
     while state=="menu":
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     tutorial()
@@ -800,7 +787,96 @@ def menu():
                     logout()
                 elif event.key == pygame.K_6:
                     wordle()
+
+def tutorial():
+    global state
+    SCREEN.fill("white")
+    TUTORIAL_TEXT = LOGIN_FONT.render("""TUTORIAL""", True, "black", "white")
+    TUTORIAL_RECT = TUTORIAL_TEXT.get_rect()
+    TUTORIAL_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(TUTORIAL_TEXT,TUTORIAL_RECT)
     
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    while state=="tutorial":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+    pygame.display.update()
+
+def leaderboard():
+    global state
+    SCREEN.fill("white")
+    LEADERBOARD_TEXT = LOGIN_FONT.render("""LEADERBOARD""", True, "black", "white")
+    LEADERBOARD_TEXT_RECT = LEADERBOARD_TEXT.get_rect()
+    LEADERBOARD_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(LEADERBOARD_TEXT,LEADERBOARD_TEXT_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    while state=="leaderboard":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                state="menu"
+                print(state)
+                menu()
+    pygame.display.update()
+
+def store():
+    global state
+    SCREEN.fill("white")
+    STORE_TEXT = LOGIN_FONT.render("""STORE""", True, "black", "white")
+    STORE_TEXT_RECT = STORE_TEXT.get_rect()
+    STORE_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(STORE_TEXT,STORE_TEXT_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    while state=="store":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+    pygame.display.update()
+
+def inventory():
+    global state
+    SCREEN.fill("white")
+    INVENTORY_TEXT = LOGIN_FONT.render("""INVENTORY""", True, "black", "white")
+    INVENTORY_TEXT_RECT = INVENTORY_TEXT.get_rect()
+    INVENTORY_TEXT_RECT.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(INVENTORY_TEXT,INVENTORY_TEXT_RECT)
+    
+    BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", "white")
+    BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+    while state=="inventory":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+    pygame.display.update()
+
+def logout():
+    global state, coins, name, username, new_name
+    state="login"
+    name=""
+    coins=0
+    username=""
+    new_name=""
 
 state="login"
 login()
