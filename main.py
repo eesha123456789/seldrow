@@ -433,27 +433,6 @@ def login():
                 pygame.quit()
                 sys.exit()
                 
-            if(event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_RETURN:
-                    if active1 and username!="":
-                        state = "wordle"
-                        wordle()
-                    elif active2 and new_name!="":
-                        state ="wordle"  
-                        db.reference("/Players/").update({new_name:{"Coins":0}})
-                        wordle()
-                if active1:
-                    if event.key == pygame.K_BACKSPACE:
-                        username = username[:-1]
-                    else:
-                        username += event.unicode
-                elif active2:
-                    if(event.type == pygame.KEYDOWN):
-                        if event.key == pygame.K_BACKSPACE:
-                            new_name = new_name[:-1]
-                        else:
-                            new_name += event.unicode
-                        
             if  event.type == pygame.MOUSEBUTTONDOWN:
                 if NAME_RECT.collidepoint(event.pos):
                     active1 = True
@@ -466,16 +445,35 @@ def login():
                 else:
                     active1 = False
                     active2 = False
+                    
+            if(event.type == pygame.KEYDOWN):
+                if event.key == pygame.K_RETURN:
+                    if active1 and username!="":
+                        state ="wordle"
+                        wordle()
+                    elif active2 and new_name!="":
+                        state ="wordle"  
+                        db.reference("/Player").push().set(new_name)
+                        wordle()
+                if active1:
+                    if event.key == pygame.K_BACKSPACE:
+                        username = username[:-1]
+                    else:
+                        username += event.unicode
+                elif active2:
+                    if(event.type == pygame.KEYDOWN):
+                        if event.key == pygame.K_BACKSPACE:
+                            new_name = new_name[:-1]
+                        else:
+                            new_name += event.unicode
             
                         
         
         SCREEN.fill("white")
         if active1:
             color1 = color_active
-            color2 = color_passive
         elif active2:
             color2 = color_active
-            color1 = color_passive
         else:
             color1 = color_passive
             color2 = color_passive
@@ -504,8 +502,6 @@ def login():
 def wordle():
     global wordle_start, play_BG_Sounds, key_pressed, current_answer
     SCREEN.fill("White")
-    elevator.set_volume(0.4)
-    elevator.play()
     while state=="wordle":
         
         for event in pygame.event.get():
@@ -516,7 +512,8 @@ def wordle():
             if wordle_start == False:
                 initialWordle()
                 cur_bg = ""
-                
+                elevator.set_volume(0.4)
+                elevator.play()
                 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                     cur_bg = "nature"
