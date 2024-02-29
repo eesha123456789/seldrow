@@ -76,8 +76,8 @@ CUTE_BG = pygame.transform.scale(CUTE_BG, (1200, 900))
 CUTE_RECT = BACKGROUND.get_rect(center = (0,0))
 
 LEADERBOARD = pygame.image.load("image_folder/leaderboard.png")
-LEADERBOARD = pygame.transform.scale(LEADERBOARD, (400, 600))
-LEADERBOARD_RECT = LEADERBOARD.get_rect(center = (WIDTH//2, HEIGHT//2))
+LEADERBOARD = pygame.transform.scale(LEADERBOARD, (500, 600))
+LEADERBOARD_RECT = LEADERBOARD.get_rect(center = (WIDTH//2, HEIGHT//2 - 20))
 
 WORDLE_WIN = pygame.image.load("bg_folder/wordle_win.png") 
 WORDLE_WIN_RECT = WORDLE_WIN.get_rect(center=(WIDTH//2, HEIGHT//2)) 
@@ -842,8 +842,36 @@ def leaderboard():
                     
     BACK_TO_MAIN_TEXT = LOGIN_FONT.render("""To go back to Main Menu press 0""", True, "black", None)
     BACK_TO_MAIN_RECT = BACK_TO_MAIN_TEXT.get_rect()
-    BACK_TO_MAIN_RECT.center = (WIDTH // 2, 18)
+    BACK_TO_MAIN_RECT.center = (WIDTH // 2, 630)
     SCREEN.blit(BACK_TO_MAIN_TEXT,BACK_TO_MAIN_RECT)
+
+    coins_ref = db.reference("Players")
+    #snapshot is in order from smallest to largest for the five richest players
+    snapshot = coins_ref.order_by_child("Coins").limit_to_last(5).get()
+    
+    #where the last player starts on the screen
+    #for when the number of total players < 5
+    start_height = 50
+    for key in snapshot:
+        start_height += 100
+
+    delta_height = 0
+    for key in snapshot:
+        print(key)
+        PLAYER_NAME = DISPLAY_FONT.render(key, True, "black", None)
+        NAME_RECT = PLAYER_NAME.get_rect()
+        NAME_RECT.center = (WIDTH // 2 - 70, start_height + delta_height)
+        SCREEN.blit(PLAYER_NAME,NAME_RECT)
+
+        PLAYER_COINS = DISPLAY_FONT.render(str(db.reference("/Players/" + key + "/Coins").get()), True, "black", None)
+        COINS_RECT = PLAYER_COINS.get_rect()
+        COINS_RECT.center = (WIDTH // 2 + 150, start_height + delta_height)
+        SCREEN.blit(PLAYER_COINS,COINS_RECT)
+
+        #minus since snapshot goes from smallest to largest not largest to smallest
+        delta_height -= 100
+    
+
     pygame.display.update()
     while state=="leaderboard":
         for event in pygame.event.get():
