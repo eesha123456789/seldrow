@@ -552,8 +552,10 @@ def login():
         SCREEN.fill("white")
         if active1:
             color1 = color_active
+            color2 = color_passive
         elif active2:
             color2 = color_active
+            color1 = color_passive
         else:
             color1 = color_passive
             color2 = color_passive
