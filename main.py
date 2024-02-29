@@ -739,6 +739,11 @@ def wordle():
 
 def tutorial():
     SCREEN.fill("white")
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    pygame.display.update()
 
 def leaderboard():
     SCREEN.fill("white")
