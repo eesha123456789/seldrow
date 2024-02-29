@@ -515,9 +515,9 @@ def login():
                             noUsernamePopup.mainloop()
                         
                         else:
-                            state ="wordle"
+                            state ="menu"
                             #coins = db.reference("/Players/" + name + "/Coins").get()
-                            wordle()
+                            menu()
                     elif active2 and new_name!="":
                         name = new_name
                         name_exists = db.reference("/Players/" + name).get()
@@ -530,10 +530,10 @@ def login():
                             alreadyExistsPopup.mainloop()
 
                         else:
-                            state ="wordle"  
+                            state ="menu"  
                             db.reference("/Players/").update({new_name: {"Coins":0}})
                             #coins = db.reference("/Players/" + name + "/Coins").get()
-                            wordle()
+                            menu()
                 if active1:
                     if event.key == pygame.K_BACKSPACE:
                         username = username[:-1]
@@ -603,6 +603,8 @@ def login():
 def wordle():
     global wordle_start, play_BG_Sounds, key_pressed, current_answer, coins, guesses_count
     SCREEN.fill("White")
+    elevator.set_volume(0.4)
+    elevator.play()
     while state =="wordle":
         
         for event in pygame.event.get():
@@ -613,8 +615,6 @@ def wordle():
             if wordle_start == False:
                 initialWordle()
                 cur_bg = ""
-                elevator.set_volume(0.4)
-                elevator.play()
                 SCREEN.blit(COIN_TRACKER, COIN_TRACKER_RECT)
                 
                 COINS_TEXT = LOGIN_FONT.render(str(db.reference("/Players/" + name + "/Coins").get()), True, "black", None)
@@ -737,29 +737,76 @@ def wordle():
                             if len(current_guess_string) < 5:
                                 add_new_letter()
 
-#def menu():
+def tutorial():
+    SCREEN.fill("white")
 
-#def tutorial():
+def leaderboard():
+    SCREEN.fill("white")
 
-#def leaderboard():
+def store():
+    SCREEN.fill("white")
 
-#def store():
+def inventory():
+    SCREEN.fill("white")
 
-#def inventory():
-
-#def logout():
-
-#hi
+def logout():
+    SCREEN.fill("white")
+    
+def menu():
+    SCREEN.fill("white")
+    print("ok")
+    MENU_TEXT = LOGIN_FONT.render("""MAIN MENU""", True, "black", "white")
+    MENU_TEXT_RECT1 = MENU_TEXT.get_rect()
+    MENU_TEXT_RECT1.center = (WIDTH // 2, HEIGHT // 2-200)
+    SCREEN.blit(MENU_TEXT,MENU_TEXT_RECT1)
+    MENU_TEXT2 = DISPLAY_FONT.render("""Press 1 to for a Tutorial""", True, "black", "white")
+    MENU_TEXT_RECT2 = MENU_TEXT2.get_rect()
+    MENU_TEXT_RECT2.center = (WIDTH // 2, HEIGHT // 2-150)
+    SCREEN.blit(MENU_TEXT2,MENU_TEXT_RECT2)
+    MENU_TEXT3 = DISPLAY_FONT.render("""Press 2 for a Leaderboard""", True, "black", "white")
+    MENU_TEXT_RECT3 = MENU_TEXT3.get_rect()
+    MENU_TEXT_RECT3.center = (WIDTH // 2, HEIGHT // 2-100)
+    SCREEN.blit(MENU_TEXT3,MENU_TEXT_RECT3)
+    MENU_TEXT4 = DISPLAY_FONT.render("""Press 3 for a Store""", True, "black", "white")
+    MENU_TEXT_RECT4 = MENU_TEXT4.get_rect()
+    MENU_TEXT_RECT4.center = (WIDTH // 2, HEIGHT // 2-50)
+    SCREEN.blit(MENU_TEXT3,MENU_TEXT_RECT3)
+    MENU_TEXT5 = DISPLAY_FONT.render("""Press 4 for a Inventory""", True, "black", "white")
+    MENU_TEXT_RECT5 = MENU_TEXT5.get_rect()
+    MENU_TEXT_RECT5.center = (WIDTH // 2, HEIGHT // 2)
+    SCREEN.blit(MENU_TEXT5,MENU_TEXT_RECT5)
+    MENU_TEXT6 = DISPLAY_FONT.render("""Press 5 for a Logout""", True, "black", "white")
+    MENU_TEXT_RECT6 = MENU_TEXT6.get_rect()
+    MENU_TEXT_RECT6.center = (WIDTH // 2, HEIGHT // 2+50)
+    SCREEN.blit(MENU_TEXT6,MENU_TEXT_RECT6)
+    pygame.display.update()
+    while state=="menu":
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    tutorial()
+                elif event.key == pygame.K_2:
+                    leaderboard()
+                elif event.key == pygame.K_3:
+                    store()
+                elif event.key == pygame.K_4:
+                    inventory()
+                elif event.key == pygame.K_5:
+                    logout()
+                elif event.key == pygame.K_6:
+                    wordle()
+    
 
 state="login"
+login()
 async def main():
     global coins, name
     while True:
         coins = db.reference("/Players/" + name + "/Coins").get()
         if coins is None:
             coins = 0
-        print(coins)
-        login()
+        #print(coins)
+        
         await asyncio.sleep(0)
 
 asyncio.run(main())
